@@ -64,9 +64,7 @@ export function DocsShell({
     const resolved =
       stored === "light" || stored === "dark"
         ? stored
-        : window.matchMedia("(prefers-color-scheme: light)").matches
-          ? "light"
-          : "dark";
+        : "dark";
     document.documentElement.dataset.theme = resolved;
     const frame = window.requestAnimationFrame(() => setTheme(resolved));
     return () => window.cancelAnimationFrame(frame);
@@ -168,7 +166,7 @@ export function DocsShell({
       <header className="topbar">
         <div className="brand-area">
           <Link href="/quickstart" className="brand" aria-label="HALO Docs home">
-            <Image src="/halo-mark.svg" alt="" width={32} height={32} priority />
+            <Image src="/halo-logo.svg" alt="" width={38} height={20} priority />
             <span>HALO</span>
             <em>Docs</em>
           </Link>

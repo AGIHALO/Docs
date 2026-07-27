@@ -1,50 +1,104 @@
-@import url("https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&family=Inter:wght@400;450;500;550;600;650;700&display=swap");
+@font-face {
+  font-family: "Switzer";
+  src: url("/switzer/Switzer-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Switzer";
+  src: url("/switzer/Switzer-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Switzer";
+  src: url("/switzer/Switzer-SemiBold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Switzer";
+  src: url("/switzer/Switzer-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Pretendard";
+  src: url("/pretendard/Pretendard-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Pretendard";
+  src: url("/pretendard/Pretendard-SemiBold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Intel One Mono";
+  src: url("/intel-one-mono/IntelOneMono-Latin.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 
 :root {
-  --bg: #111314;
-  --bg-elevated: #17191a;
-  --bg-soft: #1c1f20;
-  --bg-hover: #222526;
-  --border: #292c2e;
-  --border-strong: #363a3c;
-  --text: #f0f2ed;
-  --text-muted: #a2a7a3;
-  --text-subtle: #707673;
-  --accent: #d8ff52;
-  --accent-strong: #bfe82f;
-  --accent-soft: rgba(216, 255, 82, 0.1);
-  --blue: #78a7ff;
-  --blue-soft: rgba(91, 144, 255, 0.11);
-  --warning: #f0b35a;
-  --warning-soft: rgba(240, 179, 90, 0.11);
-  --success: #58d39b;
-  --success-soft: rgba(88, 211, 155, 0.1);
-  --danger: #ff7d79;
-  --header-height: 64px;
-  --sidebar-width: 274px;
-  --toc-width: 244px;
+  --bg: #1c1e1d;
+  --bg-elevated: #202221;
+  --bg-soft: #252827;
+  --bg-hover: #292c2a;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.15);
+  --text: #f7f7f2;
+  --text-muted: #9ea6a2;
+  --text-subtle: #7c8582;
+  --accent: #f7f7f2;
+  --accent-strong: #ffffff;
+  --accent-soft: rgba(255, 255, 255, 0.07);
+  --blue: #aeb8b3;
+  --blue-soft: rgba(255, 255, 255, 0.045);
+  --warning: #d6b77a;
+  --warning-soft: rgba(214, 183, 122, 0.08);
+  --success: #8db8a0;
+  --success-soft: rgba(141, 184, 160, 0.08);
+  --danger: #ff6b6b;
+  --header-height: 54px;
+  --sidebar-width: 252px;
+  --toc-width: 226px;
   color-scheme: dark;
 }
 
 :root[data-theme="light"] {
-  --bg: #f8f9f6;
+  --bg: #f8f6f1;
   --bg-elevated: #ffffff;
-  --bg-soft: #f1f2ef;
-  --bg-hover: #e9ebe6;
-  --border: #dedfd9;
-  --border-strong: #c9cbc3;
-  --text: #171918;
-  --text-muted: #5f6561;
-  --text-subtle: #858a86;
-  --accent: #678a00;
-  --accent-strong: #4f6b00;
-  --accent-soft: rgba(101, 137, 0, 0.09);
-  --blue: #245fc8;
-  --blue-soft: rgba(36, 95, 200, 0.08);
-  --warning: #9a5d00;
-  --warning-soft: rgba(154, 93, 0, 0.08);
-  --success: #087c50;
-  --success-soft: rgba(8, 124, 80, 0.08);
+  --bg-soft: #efede8;
+  --bg-hover: #e7e4de;
+  --border: rgba(16, 18, 17, 0.1);
+  --border-strong: rgba(16, 18, 17, 0.18);
+  --text: #101211;
+  --text-muted: #555d59;
+  --text-subtle: #7c8582;
+  --accent: #101211;
+  --accent-strong: #000000;
+  --accent-soft: rgba(16, 18, 17, 0.065);
+  --blue: #53605a;
+  --blue-soft: rgba(16, 18, 17, 0.04);
+  --warning: #8d6424;
+  --warning-soft: rgba(141, 100, 36, 0.07);
+  --success: #39785b;
+  --success-soft: rgba(57, 120, 91, 0.07);
   --danger: #bd3d38;
   color-scheme: light;
 }
@@ -62,7 +116,7 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: "Switzer", "Pretendard", Arial, Helvetica, sans-serif;
   font-size: 15px;
   line-height: 1.7;
   text-rendering: optimizeLegibility;
@@ -86,12 +140,12 @@ a {
 code,
 pre,
 kbd {
-  font-family: "Geist Mono", "SFMono-Regular", Consolas, monospace;
+  font-family: "Intel One Mono", "SFMono-Regular", Consolas, monospace;
 }
 
 ::selection {
-  color: #10120b;
-  background: rgba(216, 255, 82, 0.82);
+  color: #101211;
+  background: rgba(247, 247, 242, 0.9);
 }
 
 ::-webkit-scrollbar {
@@ -121,43 +175,52 @@ kbd {
   display: grid;
   grid-template-columns: var(--sidebar-width) minmax(260px, 1fr) auto;
   align-items: center;
-  background: color-mix(in srgb, var(--bg) 92%, transparent);
+  background: color-mix(in srgb, var(--bg) 97%, transparent);
   border-bottom: 1px solid var(--border);
-  backdrop-filter: blur(18px);
+  backdrop-filter: blur(12px);
 }
 
 .brand-area {
   height: 100%;
   display: flex;
   align-items: center;
-  padding: 0 22px;
+  padding: 0 18px;
   border-right: 1px solid var(--border);
 }
 
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  letter-spacing: -0.02em;
+  gap: 9px;
+  letter-spacing: -0.01em;
 }
 
 .brand img {
   display: block;
-  border-radius: 10px;
+  width: 38px;
+  height: 20px;
+  object-fit: contain;
+}
+
+:root[data-theme="light"] .brand img {
+  filter: invert(1);
 }
 
 .brand span {
-  font-weight: 700;
-  font-size: 16px;
+  font-weight: 600;
+  font-size: 14px;
 }
 
 .brand em {
   color: var(--text-muted);
-  font-size: 13px;
+  font-family: "Intel One Mono", monospace;
+  font-size: 10px;
   font-style: normal;
-  font-weight: 500;
-  padding-left: 10px;
+  font-weight: 400;
+  padding-left: 9px;
   border-left: 1px solid var(--border-strong);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .mobile-menu-button {
@@ -179,10 +242,11 @@ kbd {
 
 .topnav a {
   color: var(--text-muted);
-  font-size: 13px;
-  font-weight: 550;
-  padding: 8px 11px;
-  border-radius: 7px;
+  font-family: "Intel One Mono", monospace;
+  font-size: 11px;
+  font-weight: 400;
+  padding: 7px 10px;
+  border-radius: 4px;
   transition: color 140ms ease, background 140ms ease;
 }
 
@@ -205,8 +269,8 @@ kbd {
   border: 1px solid var(--border);
   color: var(--text-muted);
   background: var(--bg-elevated);
-  border-radius: 8px;
-  min-height: 36px;
+  border-radius: 5px;
+  min-height: 34px;
 }
 
 .search-trigger {
@@ -221,7 +285,8 @@ kbd {
 
 .search-trigger span {
   flex: 1;
-  font-size: 12px;
+  font-family: "Intel One Mono", monospace;
+  font-size: 10px;
 }
 
 .search-trigger kbd {
@@ -229,12 +294,12 @@ kbd {
   background: var(--bg-soft);
   color: var(--text-subtle);
   padding: 1px 6px;
-  border-radius: 5px;
-  font-size: 10px;
+  border-radius: 3px;
+  font-size: 9px;
 }
 
 .icon-button {
-  width: 36px;
+  width: 34px;
   display: grid;
   place-items: center;
   cursor: pointer;
@@ -246,8 +311,9 @@ kbd {
   gap: 7px;
   padding: 0 12px;
   color: var(--text);
-  font-size: 12px;
-  font-weight: 600;
+  font-family: "Intel One Mono", monospace;
+  font-size: 10px;
+  font-weight: 400;
 }
 
 .search-trigger:hover,
@@ -267,7 +333,7 @@ kbd {
   overflow-y: auto;
   border-right: 1px solid var(--border);
   background: var(--bg);
-  padding: 26px 17px 80px;
+  padding: 24px 14px 80px;
 }
 
 .docs-sidebar-nav section + section {
@@ -277,8 +343,9 @@ kbd {
 .docs-sidebar-nav h2 {
   margin: 0 10px 8px;
   color: var(--text-subtle);
+  font-family: "Intel One Mono", monospace;
   font-size: 10px;
-  font-weight: 650;
+  font-weight: 400;
   line-height: 1.3;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -301,11 +368,11 @@ kbd {
   justify-content: space-between;
   gap: 8px;
   color: var(--text-muted);
-  font-size: 13px;
-  font-weight: 500;
+  font-size: 12px;
+  font-weight: 400;
   line-height: 1.3;
   padding: 7px 10px;
-  border-radius: 7px;
+  border-radius: 4px;
   transition: color 120ms ease, background 120ms ease;
 }
 
@@ -317,7 +384,7 @@ kbd {
 .docs-sidebar-nav a[data-active="true"] {
   color: var(--text);
   background: var(--bg-hover);
-  box-shadow: inset 2px 0 var(--accent);
+  box-shadow: inset 1px 0 var(--border-strong);
 }
 
 .docs-sidebar-nav a small {
@@ -349,9 +416,10 @@ kbd {
   gap: 8px;
   min-height: 21px;
   margin-bottom: 10px;
-  color: var(--accent);
-  font-size: 11px;
-  font-weight: 650;
+  color: var(--text-subtle);
+  font-family: "Intel One Mono", monospace;
+  font-size: 10px;
+  font-weight: 400;
   letter-spacing: 0.09em;
   text-transform: uppercase;
 }
@@ -377,10 +445,10 @@ kbd {
 .article-title-row h1 {
   margin: 0;
   color: var(--text);
-  font-size: clamp(34px, 4vw, 48px);
+  font-size: clamp(34px, 4vw, 46px);
   line-height: 1.08;
-  font-weight: 680;
-  letter-spacing: -0.045em;
+  font-weight: 600;
+  letter-spacing: -0.04em;
 }
 
 .article-description {
@@ -399,7 +467,8 @@ kbd {
   gap: 7px;
   padding: 0 10px;
   margin-top: 5px;
-  font-size: 11px;
+  font-family: "Intel One Mono", monospace;
+  font-size: 9px;
   cursor: pointer;
 }
 
@@ -487,7 +556,7 @@ kbd {
   top: inherit;
   color: var(--text-subtle);
   opacity: 0;
-  font-family: "Geist Mono", monospace;
+  font-family: "Intel One Mono", monospace;
   font-weight: 400;
   transition: opacity 120ms ease;
 }
@@ -506,7 +575,7 @@ kbd {
   color: var(--text-muted);
   background: var(--blue-soft);
   border: 1px solid color-mix(in srgb, var(--blue) 24%, var(--border));
-  border-radius: 10px;
+  border-radius: 6px;
 }
 
 .callout > svg {
@@ -558,7 +627,7 @@ kbd {
   margin: 24px 0 28px;
   background: #0a0b0c;
   border: 1px solid #2a2d2f;
-  border-radius: 10px;
+  border-radius: 6px;
   box-shadow: 0 12px 34px rgba(0, 0, 0, 0.13);
 }
 
@@ -613,8 +682,8 @@ kbd {
   content: "";
   inset: auto 12px -1px;
   height: 2px;
-  background: #d8ff52;
-  border-radius: 999px;
+  background: #f7f7f2;
+  border-radius: 0;
 }
 
 .copy-code {
@@ -678,7 +747,7 @@ kbd {
   background: var(--bg-elevated);
   border: 1px solid color-mix(in srgb, var(--accent) 27%, var(--border));
   border-radius: 50%;
-  font-family: "Geist Mono", monospace;
+  font-family: "Intel One Mono", monospace;
   font-size: 11px;
   font-weight: 600;
 }
@@ -716,7 +785,7 @@ kbd {
   padding: 18px;
   background: var(--bg-elevated);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: 6px;
   transition: border-color 150ms ease, transform 150ms ease,
     background 150ms ease;
 }
@@ -818,7 +887,7 @@ a.feature-card:hover {
   color: var(--blue);
   background: var(--blue-soft);
   border-radius: 5px;
-  font-family: "Geist Mono", monospace;
+  font-family: "Intel One Mono", monospace;
   font-size: 9px;
   font-weight: 650;
 }
@@ -1137,7 +1206,7 @@ a.feature-card:hover {
 .not-found > span {
   margin-top: 22px;
   color: var(--accent);
-  font-family: "Geist Mono", monospace;
+  font-family: "Intel One Mono", monospace;
   font-size: 11px;
 }
 

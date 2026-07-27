@@ -1,0 +1,37 @@
+<svg width="64" height="64" viewBox="0 0 285 152" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .halo-mark {
+      fill: #171717;
+    }
+
+    .halo-accent-start {
+      stop-color: #737373;
+    }
+
+    .halo-accent-end {
+      stop-color: #171717;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .halo-mark {
+        fill: #f8fafc;
+      }
+
+      .halo-accent-start {
+        stop-color: #b3b4b4;
+      }
+
+      .halo-accent-end {
+        stop-color: #ffffff;
+      }
+    }
+  </style>
+  <path class="halo-mark" d="M155.812 5.21623C77.7521 -10.0238 8.30208 9.26623 0.682078 48.2862C-6.93792 87.3162 50.1621 131.306 128.222 146.546C206.282 161.786 275.732 142.496 283.352 103.476C290.972 64.4462 233.872 20.4562 155.812 5.21623ZM170.222 138.236C124.142 129.236 88.8821 106.486 85.5121 85.0062C96.7121 66.3662 137.942 58.5462 184.022 67.5362C230.102 76.5362 265.362 99.2862 268.742 120.776C257.532 139.406 216.302 147.226 170.222 138.236Z" />
+  <path d="M271.362 114.056C270.902 116.436 270.012 118.676 268.742 120.776C265.362 99.2963 230.102 76.5363 184.022 67.5363C137.942 58.5363 96.712 66.3663 85.512 85.0063C85.122 82.5763 85.142 80.1663 85.602 77.7863C90.162 54.4163 135.452 43.5862 186.742 53.5962C238.032 63.6062 275.922 90.6763 271.352 114.046L271.362 114.056Z" fill="url(#halo-accent)" />
+  <defs>
+    <linearGradient id="halo-accent" x1="97.252" y1="58.9362" x2="273.442" y2="104.966" gradientUnits="userSpaceOnUse">
+      <stop class="halo-accent-start" />
+      <stop class="halo-accent-end" offset="1" />
+    </linearGradient>
+  </defs>
+</svg>

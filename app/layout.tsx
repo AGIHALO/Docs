@@ -24,7 +24,7 @@ export const metadata: Metadata = {
       "Build with HALO Model Gateway, Memory, Authentication, Services, Keeper, and x402.",
   },
   icons: {
-    icon: "/halo-mark.svg",
+    icon: "/favicon.svg",
   },
 };
 
@@ -34,9 +34,7 @@ const themeScript = `
       const stored = localStorage.getItem("halo-docs-theme");
       const theme = stored === "light" || stored === "dark"
         ? stored
-        : matchMedia("(prefers-color-scheme: light)").matches
-          ? "light"
-          : "dark";
+        : "dark";
       document.documentElement.dataset.theme = theme;
     } catch {}
   })();
