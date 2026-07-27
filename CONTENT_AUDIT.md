@@ -3,8 +3,8 @@
 Reviewed against:
 
 - backend production commit `607f79764bbeb0d6776cbdb1b4e05efcacaadcd6`
-- frontend production commit `8541b76171d8100bcb8a0de52f8018a4ef801c1b`
-- Node SDK and Python SDK source plus existing Memory guides
+- frontend production commit `f52f89526744a2e11a38107bc6999d78770bf09d`
+- Node SDK and Python SDK source, including the Authentication/OAuth clients
 
 ## Previously documented
 
@@ -25,6 +25,7 @@ Reviewed against:
 - ERC-8004 registry flow, DNS proof, metadata, and owner proof
 - Usage, balance, billing, and x402 behavior
 - Unified endpoint and error reference
+- Node and Python SDK coverage for Project Authentication and Service OAuth
 
 ## Preview-only
 

@@ -75,6 +75,57 @@ memory.capture(
     },
 )`;
 
+const nodeAuthentication = `import {
+  HaloAuthClient,
+  HaloOAuthClient,
+} from "agihalo-node-sdk";
+
+// OEM or application user Authentication.
+const auth = new HaloAuthClient({
+  publishableKey: HALO_PROJECT_PUBLISHABLE_KEY,
+});
+
+const session = await auth.signInWithPassword(
+  "user@example.com",
+  "Secret123!"
+);
+const refreshed = await auth.refreshSession(session.refresh_token);
+const user = await auth.getUser(refreshed.access_token);
+
+// Service-side OAuth App client.
+const oauth = new HaloOAuthClient({
+  clientId: "halo_client_...",
+  clientSecret: HALO_OAUTH_CLIENT_SECRET,
+});
+
+const tokens = await oauth.exchangeCode(
+  callbackCode,
+  "https://service.example.com/callback"
+);`;
+
+const pythonAuthentication = `from halo import HaloAuthClient, HaloOAuthClient
+
+# OEM or application user Authentication.
+auth = HaloAuthClient(
+    publishable_key=HALO_PROJECT_PUBLISHABLE_KEY,
+)
+session = auth.sign_in_with_password(
+    "user@example.com",
+    "Secret123!",
+)
+refreshed = auth.refresh_session(session["refresh_token"])
+user = auth.get_user(refreshed["access_token"])
+
+# Service-side OAuth App client.
+oauth = HaloOAuthClient(
+    client_id="halo_client_...",
+    client_secret=HALO_OAUTH_CLIENT_SECRET,
+)
+tokens = oauth.exchange_code(
+    code=callback_code,
+    redirect_uri="https://service.example.com/callback",
+)`;
+
 export const billingSdkReferencePages: DocPageMap = {
   "billing/usage": {
     toc: [
@@ -242,8 +293,10 @@ const result = await paidModel.generateContent("Continue the task");`}
   "sdks/node": {
     toc: [
       { id: "install", label: "Install" },
+      { id: "authentication", label: "Authentication & OAuth" },
       { id: "memory", label: "Memory client" },
       { id: "delete", label: "Memory deletion" },
+      { id: "connections", label: "Connected accounts" },
       { id: "payments", label: "Payment helpers" },
     ],
     content: (
@@ -260,6 +313,27 @@ const result = await paidModel.generateContent("Continue the task");`}
           label="npm"
           code={`npm install agihalo-node-sdk ethers`}
         />
+
+        <H2 id="authentication">Authentication & OAuth</H2>
+        <Code
+          language="typescript"
+          label="TypeScript"
+          code={nodeAuthentication}
+        />
+        <p>
+          <code>HaloAuthClient</code> uses a Project publishable key for
+          application-user signup, password sessions, refresh rotation, user
+          lookup, password recovery, and upstream provider PKCE flows.
+          <code>HaloOAuthClient</code> is for Services registered as OAuth Apps.
+          It does not store returned tokens.
+        </p>
+        <Callout kind="warning" title="Keep confidential secrets server-side">
+          <p>
+            A Project publishable key may run in a frontend. An OAuth App
+            <code>clientSecret</code>, HALO client key, provider secret, or wallet
+            private key must remain in a trusted runtime.
+          </p>
+        </Callout>
 
         <H2 id="memory">Memory client</H2>
         <Code language="typescript" label="TypeScript" code={nodeMemory} />
@@ -286,6 +360,33 @@ await memory.deleteRawEntry({
   rawEntryId: "raw_entry_id",
 });`}
         />
+
+        <H2 id="connections">Connected accounts</H2>
+        <Code
+          language="typescript"
+          label="TypeScript"
+          code={`await memory.registerOAuthProvider({
+  providerKey: "google",
+  clientId: GOOGLE_CLIENT_ID,
+  clientSecret: GOOGLE_CLIENT_SECRET,
+  redirectUri:
+    "https://connect.example.com/api/v1/memory/oauth/callback/google",
+});
+
+const result = await memory.startOAuth({
+  scopeId: "memory-scope-uuid",
+  connectorId: "google.calendar",
+  completionMode: "mobile_deep_link",
+  returnUri: "example-app://oauth/complete",
+});`}
+        />
+        <Callout kind="warning" title="Preview API">
+          <p>
+            Connected-account helpers are packaged for controlled rollout. Verify
+            that the connector is enabled for your project before exposing the
+            flow to end users.
+          </p>
+        </Callout>
 
         <H2 id="payments">Payment helpers</H2>
         <p>
@@ -314,7 +415,10 @@ const signature = await tools.signPayment(paymentRequirement);`}
   "sdks/python": {
     toc: [
       { id: "install", label: "Install" },
+      { id: "authentication", label: "Authentication & OAuth" },
       { id: "memory", label: "Memory client" },
+      { id: "delete", label: "Memory deletion" },
+      { id: "connections", label: "Connected accounts" },
       { id: "router", label: "Legacy router headers" },
       { id: "payments", label: "Payment helpers" },
     ],
@@ -327,8 +431,53 @@ const signature = await tools.signPayment(paymentRequirement);`}
         <H2 id="install">Install</H2>
         <Code language="bash" label="pip" code={`pip install halo-sdk`} />
 
+        <H2 id="authentication">Authentication & OAuth</H2>
+        <Code
+          language="python"
+          label="Python"
+          code={pythonAuthentication}
+        />
+        <p>
+          The Python clients expose the same Project-user and Service OAuth
+          boundaries as the Node.js SDK and never persist returned tokens.
+        </p>
+
         <H2 id="memory">Memory client</H2>
         <Code language="python" label="Python" code={pythonMemory} />
+
+        <H2 id="delete">Memory deletion</H2>
+        <Code
+          language="python"
+          label="Python"
+          code={`memory.delete_topic(
+    end_user_key="user_123",
+    topic_key="report_preferences",
+    include_raw=False,
+)
+
+memory.delete_raw_entry(
+    end_user_key="user_123",
+    raw_entry_id="raw_entry_id",
+)`}
+        />
+
+        <H2 id="connections">Connected accounts</H2>
+        <Code
+          language="python"
+          label="Python"
+          code={`result = memory.start_oauth(
+    scope_id="memory-scope-uuid",
+    connector_id="google.calendar",
+    completion_mode="mobile_deep_link",
+    return_uri="example-app://oauth/complete",
+)`}
+        />
+        <Callout kind="warning" title="Preview API">
+          <p>
+            Connected-account helpers are packaged for controlled rollout. Check
+            connector availability before showing the authorization flow.
+          </p>
+        </Callout>
 
         <H2 id="router">Legacy router headers</H2>
         <Code
