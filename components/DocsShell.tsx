@@ -7,6 +7,7 @@ import {
   ChevronRight,
   Copy,
   ExternalLink,
+  Languages,
   Menu,
   Moon,
   Search,
@@ -15,7 +16,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   type ReactNode,
   useCallback,
@@ -25,6 +26,15 @@ import {
   useState,
 } from "react";
 import type { DocEntry, NavGroup } from "@/lib/navigation";
+import { DocsLocaleProvider } from "./DocsLocaleContext";
+import {
+  DOCS_LOCALE_OPTIONS,
+  getDocsLocaleOption,
+  getDocsUi,
+  getLocalizedDocHref,
+  isDocsLocale,
+  type DocsLocale,
+} from "@/lib/i18n/locales";
 
 interface TocItem {
   id: string;
@@ -33,6 +43,7 @@ interface TocItem {
 }
 
 interface DocsShellProps {
+  locale: DocsLocale;
   current: DocEntry;
   navGroups: NavGroup[];
   toc: TocItem[];
@@ -44,6 +55,7 @@ interface DocsShellProps {
 const normalize = (value: string) => value.trim().toLowerCase();
 
 export function DocsShell({
+  locale,
   current,
   navGroups,
   toc,
@@ -52,6 +64,8 @@ export function DocsShell({
   children,
 }: DocsShellProps) {
   const pathname = usePathname();
+  const router = useRouter();
+  const ui = getDocsUi(locale);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -69,6 +83,11 @@ export function DocsShell({
     const frame = window.requestAnimationFrame(() => setTheme(resolved));
     return () => window.cancelAnimationFrame(frame);
   }, []);
+
+  useEffect(() => {
+    document.documentElement.lang = getDocsLocaleOption(locale).htmlLang;
+    window.localStorage.setItem("halo-docs-locale", locale);
+  }, [locale]);
 
   const closeSearch = useCallback(() => {
     setSearchOpen(false);
@@ -132,14 +151,22 @@ export function DocsShell({
     window.setTimeout(() => setCopied(false), 1600);
   };
 
+  const changeLocale = (value: string) => {
+    if (!isDocsLocale(value) || value === locale) return;
+    window.localStorage.setItem("halo-docs-locale", value);
+    router.push(
+      `${getLocalizedDocHref(value, current.slug)}${window.location.hash}`
+    );
+  };
+
   const sidebar = (
-    <nav className="docs-sidebar-nav" aria-label="Documentation pages">
+    <nav className="docs-sidebar-nav" aria-label={ui.documentationPages}>
       {navGroups.map((group) => (
         <section key={group.label}>
           <h2>{group.label}</h2>
           <ul>
             {group.items.map((entry) => {
-              const href = `/${entry.slug}`;
+              const href = getLocalizedDocHref(locale, entry.slug);
               const active = pathname === href;
               return (
                 <li key={entry.slug}>
@@ -150,7 +177,9 @@ export function DocsShell({
                     onClick={() => setMobileNavOpen(false)}
                   >
                     <span>{entry.title}</span>
-                    {entry.status === "preview" ? <small>Preview</small> : null}
+                    {entry.status === "preview" ? (
+                      <small>{ui.preview}</small>
+                    ) : null}
                   </Link>
                 </li>
               );
@@ -162,10 +191,18 @@ export function DocsShell({
   );
 
   return (
-    <div className="docs-app">
+    <div
+      className="docs-app"
+      data-locale={locale}
+      lang={getDocsLocaleOption(locale).htmlLang}
+    >
       <header className="topbar">
         <div className="brand-area">
-          <Link href="/quickstart" className="brand" aria-label="HALO Docs home">
+          <Link
+            href={getLocalizedDocHref(locale, "quickstart")}
+            className="brand"
+            aria-label={ui.haloDocsHome}
+          >
             <Image src="/halo-logo.svg" alt="" width={38} height={20} priority />
             <span>HALO</span>
             <em>Docs</em>
@@ -174,16 +211,22 @@ export function DocsShell({
             type="button"
             className="mobile-menu-button"
             onClick={() => setMobileNavOpen(true)}
-            aria-label="Open documentation navigation"
+            aria-label={ui.openNavigation}
           >
             <Menu size={19} />
           </button>
         </div>
 
-        <nav className="topnav" aria-label="Documentation sections">
-          <Link href="/quickstart">Guides</Link>
-          <Link href="/api-reference/endpoints">API Reference</Link>
-          <Link href="/sdks/node">SDKs</Link>
+        <nav className="topnav" aria-label={ui.documentationSections}>
+          <Link href={getLocalizedDocHref(locale, "quickstart")}>
+            {ui.guides}
+          </Link>
+          <Link href={getLocalizedDocHref(locale, "api-reference/endpoints")}>
+            {ui.apiReference}
+          </Link>
+          <Link href={getLocalizedDocHref(locale, "sdks/node")}>
+            {ui.sdks}
+          </Link>
         </nav>
 
         <div className="top-actions">
@@ -191,17 +234,35 @@ export function DocsShell({
             type="button"
             className="search-trigger"
             onClick={() => setSearchOpen(true)}
-            aria-label="Search documentation"
+            aria-label={ui.searchDocumentation}
           >
             <Search size={15} />
-            <span>Search docs</span>
+            <span>{ui.searchDocs}</span>
             <kbd>⌘K</kbd>
           </button>
+          <div className="language-select">
+            <Languages size={15} aria-hidden="true" />
+            <select
+              value={locale}
+              onChange={(event) => changeLocale(event.target.value)}
+              aria-label={ui.language}
+            >
+              {DOCS_LOCALE_OPTIONS.map((option) => (
+                <option key={option.code} value={option.code}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
           <button
             type="button"
             className="icon-button"
             onClick={toggleTheme}
-            aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
+            aria-label={
+              theme === "dark"
+                ? ui.switchToLightTheme
+                : ui.switchToDarkTheme
+            }
           >
             {theme === "dark" ? <Sun size={17} /> : <Moon size={17} />}
           </button>
@@ -211,7 +272,7 @@ export function DocsShell({
             target="_blank"
             rel="noreferrer"
           >
-            Dashboard
+            {ui.dashboard}
             <ExternalLink size={14} />
           </a>
         </div>
@@ -223,7 +284,7 @@ export function DocsShell({
         <article>
           <div className="article-kicker">
             <span>{current.group}</span>
-            {current.status === "preview" ? <em>Preview</em> : null}
+            {current.status === "preview" ? <em>{ui.preview}</em> : null}
           </div>
           <div className="article-title-row">
             <div>
@@ -236,16 +297,20 @@ export function DocsShell({
               onClick={copyPageLink}
             >
               {copied ? <Check size={15} /> : <Copy size={15} />}
-              {copied ? "Link copied" : "Copy page"}
+              {copied ? ui.linkCopied : ui.copyPage}
             </button>
           </div>
-          <div className="article-content">{children}</div>
-          <nav className="article-pagination" aria-label="Previous and next pages">
+          <div className="article-content">
+            <DocsLocaleProvider locale={locale}>
+              {children}
+            </DocsLocaleProvider>
+          </div>
+          <nav className="article-pagination" aria-label={ui.previousAndNext}>
             {previous ? (
-              <Link href={`/${previous.slug}`}>
+              <Link href={getLocalizedDocHref(locale, previous.slug)}>
                 <span>
                   <ArrowLeft size={15} />
-                  Previous
+                  {ui.previous}
                 </span>
                 <strong>{previous.title}</strong>
               </Link>
@@ -253,9 +318,12 @@ export function DocsShell({
               <span />
             )}
             {next ? (
-              <Link href={`/${next.slug}`} className="next">
+              <Link
+                href={getLocalizedDocHref(locale, next.slug)}
+                className="next"
+              >
                 <span>
-                  Next
+                  {ui.next}
                   <ArrowRight size={15} />
                 </span>
                 <strong>{next.title}</strong>
@@ -263,15 +331,15 @@ export function DocsShell({
             ) : null}
           </nav>
           <footer className="article-footer">
-            <span>HALO documentation</span>
-            <a href="mailto:contact@agihalo.com">Report an issue</a>
+            <span>{ui.haloDocumentation}</span>
+            <a href="mailto:contact@agihalo.com">{ui.reportIssue}</a>
           </footer>
         </article>
       </main>
 
       <aside className="toc-panel">
-        <nav aria-label="On this page">
-          <h2>On this page</h2>
+        <nav aria-label={ui.onThisPage}>
+          <h2>{ui.onThisPage}</h2>
           <ul>
             {toc.map((item) => (
               <li key={item.id} data-level={item.level || 2}>
@@ -287,16 +355,16 @@ export function DocsShell({
           <button
             className="drawer-backdrop"
             type="button"
-            aria-label="Close navigation"
+            aria-label={ui.closeNavigation}
             onClick={() => setMobileNavOpen(false)}
           />
           <aside>
             <div className="drawer-header">
-              <strong>Documentation</strong>
+              <strong>{ui.documentation}</strong>
               <button
                 type="button"
                 onClick={() => setMobileNavOpen(false)}
-                aria-label="Close documentation navigation"
+                aria-label={ui.closeNavigation}
               >
                 <X size={19} />
               </button>
@@ -311,7 +379,7 @@ export function DocsShell({
           <button
             className="search-backdrop"
             type="button"
-            aria-label="Close search"
+            aria-label={ui.closeSearch}
             onClick={closeSearch}
           />
           <section className="search-dialog">
@@ -321,20 +389,24 @@ export function DocsShell({
                 ref={searchInputRef}
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder="Search guides, APIs, and SDKs…"
-                aria-label="Search documentation"
+                placeholder={ui.searchPlaceholder}
+                aria-label={ui.searchDocumentation}
               />
-              <button type="button" onClick={closeSearch} aria-label="Close search">
+              <button
+                type="button"
+                onClick={closeSearch}
+                aria-label={ui.closeSearch}
+              >
                 <X size={18} />
               </button>
             </div>
             <div className="search-results">
-              <small>{query ? "RESULTS" : "QUICK LINKS"}</small>
+              <small>{query ? ui.results : ui.quickLinks}</small>
               {searchResults.length ? (
                 searchResults.map((entry) => (
                   <Link
                     key={entry.slug}
-                    href={`/${entry.slug}`}
+                    href={getLocalizedDocHref(locale, entry.slug)}
                     onClick={closeSearch}
                   >
                     <div>
@@ -345,7 +417,11 @@ export function DocsShell({
                   </Link>
                 ))
               ) : (
-                <p>No documentation matched “{query}”.</p>
+                <p>
+                  {ui.noResultsPrefix}
+                  {query}
+                  {ui.noResultsSuffix}
+                </p>
               )}
             </div>
           </section>

@@ -2,6 +2,7 @@
 
 import { Check, Copy } from "lucide-react";
 import { useState } from "react";
+import { useDocsLocale } from "./DocsLocaleContext";
 
 export interface CodeExample {
   label: string;
@@ -16,6 +17,7 @@ export function CodeTabs({
   examples: CodeExample[];
   title?: string;
 }) {
+  const { ui } = useDocsLocale();
   const [activeIndex, setActiveIndex] = useState(0);
   const [copied, setCopied] = useState(false);
   const active = examples[activeIndex] || examples[0];
@@ -29,7 +31,11 @@ export function CodeTabs({
   return (
     <div className="code-frame">
       <div className="code-toolbar">
-        <div className="code-tabs" role="tablist" aria-label={title || "Code examples"}>
+        <div
+          className="code-tabs"
+          role="tablist"
+          aria-label={title || ui.codeExamples}
+        >
           {examples.map((example, index) => (
             <button
               key={`${example.label}-${index}`}
@@ -50,10 +56,10 @@ export function CodeTabs({
           type="button"
           className="copy-code"
           onClick={copy}
-          aria-label="Copy code"
+          aria-label={ui.copyCode}
         >
           {copied ? <Check size={15} /> : <Copy size={15} />}
-          <span>{copied ? "Copied" : "Copy"}</span>
+          <span>{copied ? ui.copied : ui.copy}</span>
         </button>
       </div>
       <pre data-language={active.language}>

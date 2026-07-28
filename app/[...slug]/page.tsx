@@ -8,6 +8,17 @@ import {
   findDocEntry,
   getAdjacentDocs,
 } from "@/lib/navigation";
+import {
+  DOCS_LOCALES,
+  DOCS_LOCALE_OPTIONS,
+  getLocalizedDocHref,
+  parseLocalizedDocSlug,
+} from "@/lib/i18n/locales";
+import {
+  localizeDocEntry,
+  localizeDocPage,
+  localizeNavGroups,
+} from "@/lib/i18n/server";
 
 interface PageProps {
   params: Promise<{ slug: string[] }>;
@@ -16,48 +27,68 @@ interface PageProps {
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return DOC_ENTRIES.map((entry) => ({ slug: entry.slug.split("/") }));
+  return DOCS_LOCALES.flatMap((locale) =>
+    DOC_ENTRIES.map((entry) => ({
+      slug: (
+        locale === "en" ? entry.slug : `${locale}/${entry.slug}`
+      ).split("/"),
+    }))
+  );
 }
 
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
-  const { slug } = await params;
-  const path = slug.join("/");
+  const { slug: segments } = await params;
+  const { locale, slug: path } = parseLocalizedDocSlug(segments);
   const entry = findDocEntry(path);
   if (!entry) return {};
+  const localizedEntry = localizeDocEntry(entry, locale) || entry;
+  const canonical = getLocalizedDocHref(locale, entry.slug);
+  const languages = Object.fromEntries(
+    DOCS_LOCALE_OPTIONS.map((option) => [
+      option.htmlLang,
+      getLocalizedDocHref(option.code, entry.slug),
+    ])
+  );
   return {
-    title: entry.title,
-    description: entry.description,
+    title: localizedEntry.title,
+    description: localizedEntry.description,
     alternates: {
-      canonical: `/${entry.slug}`,
+      canonical,
+      languages,
     },
     openGraph: {
-      title: `${entry.title} · HALO Docs`,
-      description: entry.description,
-      url: `/${entry.slug}`,
+      title: `${localizedEntry.title} · HALO Docs`,
+      description: localizedEntry.description,
+      url: canonical,
+      locale:
+        DOCS_LOCALE_OPTIONS.find((option) => option.code === locale)
+          ?.htmlLang || "en",
     },
   };
 }
 
 export default async function DocumentationPage({ params }: PageProps) {
-  const { slug } = await params;
-  const path = slug.join("/");
+  const { slug: segments } = await params;
+  const { locale, slug: path } = parseLocalizedDocSlug(segments);
   const entry = findDocEntry(path);
   const page = findDocPage(path);
   if (!entry || !page) notFound();
 
   const { previous, next } = getAdjacentDocs(path);
+  const localizedPage = localizeDocPage(page, locale);
 
   return (
     <DocsShell
-      current={entry}
-      navGroups={NAV_GROUPS}
-      toc={page.toc}
-      previous={previous}
-      next={next}
+      locale={locale}
+      current={localizeDocEntry(entry, locale) || entry}
+      navGroups={localizeNavGroups(NAV_GROUPS, locale)}
+      toc={localizedPage.toc}
+      previous={localizeDocEntry(previous, locale)}
+      next={localizeDocEntry(next, locale)}
     >
-      {page.content}
+      {localizedPage.content}
     </DocsShell>
   );
 }

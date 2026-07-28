@@ -28,8 +28,18 @@ export const metadata: Metadata = {
   },
 };
 
-const themeScript = `
+const bootstrapScript = `
   (() => {
+    const locale = location.pathname.split("/")[1];
+    document.documentElement.lang =
+      locale === "ko"
+        ? "ko"
+        : locale === "zh"
+          ? "zh-CN"
+          : locale === "ja"
+            ? "ja"
+            : "en";
+
     try {
       const stored = localStorage.getItem("halo-docs-theme");
       const theme = stored === "light" || stored === "dark"
@@ -44,7 +54,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <script dangerouslySetInnerHTML={{ __html: bootstrapScript }} />
       </head>
       <body>{children}</body>
     </html>

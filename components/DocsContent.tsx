@@ -17,7 +17,7 @@ export function H2({
 }) {
   return (
     <h2 id={id} className="doc-heading">
-      <a href={`#${id}`} aria-label={`Link to ${String(children)}`}>
+      <a href={`#${id}`} aria-label={String(children)}>
         #
       </a>
       {children}
@@ -34,7 +34,7 @@ export function H3({
 }) {
   return (
     <h3 id={id} className="doc-subheading">
-      <a href={`#${id}`} aria-label={`Link to ${String(children)}`}>
+      <a href={`#${id}`} aria-label={String(children)}>
         #
       </a>
       {children}
