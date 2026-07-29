@@ -87,24 +87,6 @@ export const GENERATED_CONTEXTUAL_TRANSLATIONS = {
         "translated": "다시 모델의 도구 루프."
       }
     ],
-    "The product calls these records Services. The current production REST route retains /api/v1/agents for compatibility while the registry schema migrates to Service naming.": [
-      {
-        "source": "The product calls these records",
-        "translated": "제품은 이러한 기록을"
-      },
-      {
-        "source": "Services",
-        "translated": "서비스"
-      },
-      {
-        "source": ". The current production REST route retains",
-        "translated": "라고 부릅니다. 현재 프로덕션 REST 경로는 레지스트리 스키마가 서비스 이름 지정으로 마이그레이션되는 동안 호환성을 위해"
-      },
-      {
-        "source": "for compatibility while the registry schema migrates to Service naming.",
-        "translated": "를 유지합니다."
-      }
-    ],
     "Memory payloads may require a projectKey, but this value is not the sk- client credential. The API key belongs in the authorization header.": [
       {
         "source": "Memory payloads may require a",
@@ -605,24 +587,6 @@ export const GENERATED_CONTEXTUAL_TRANSLATIONS = {
       {
         "source": "back into the model's tool loop.",
         "translated": "返回进入模型的工具循环。"
-      }
-    ],
-    "The product calls these records Services. The current production REST route retains /api/v1/agents for compatibility while the registry schema migrates to Service naming.": [
-      {
-        "source": "The product calls these records",
-        "translated": "产品调用这些记录"
-      },
-      {
-        "source": "Services",
-        "translated": "服务"
-      },
-      {
-        "source": ". The current production REST route retains",
-        "translated": "。当前生产 REST 路由保留"
-      },
-      {
-        "source": "for compatibility while the registry schema migrates to Service naming.",
-        "translated": "以实现兼容性，同时注册表架构迁移到服务命名。"
       }
     ],
     "Memory payloads may require a projectKey, but this value is not the sk- client credential. The API key belongs in the authorization header.": [
@@ -1129,24 +1093,6 @@ export const GENERATED_CONTEXTUAL_TRANSLATIONS = {
       {
         "source": "back into the model's tool loop.",
         "translated": "モデルのツール ループに戻ります。"
-      }
-    ],
-    "The product calls these records Services. The current production REST route retains /api/v1/agents for compatibility while the registry schema migrates to Service naming.": [
-      {
-        "source": "The product calls these records",
-        "translated": "製品は、これらのレコードを"
-      },
-      {
-        "source": "Services",
-        "translated": "サービス"
-      },
-      {
-        "source": ". The current production REST route retains",
-        "translated": "と呼びます。現在の実稼働 REST ルートは、レジストリ スキーマがサービスの名前付けに移行される間、互換性のために"
-      },
-      {
-        "source": "for compatibility while the registry schema migrates to Service naming.",
-        "translated": "を保持します。"
       }
     ],
     "Memory payloads may require a projectKey, but this value is not the sk- client credential. The API key belongs in the authorization header.": [

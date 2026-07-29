@@ -9,14 +9,14 @@ import {
 } from "@/components/DocsContent";
 import type { DocPageMap } from "./types";
 
-const createService = `curl -X POST https://api.agihalo.com/api/v1/agents \\
+const createService = `curl -X POST https://api.agihalo.com/api/v1/services \\
   -H "Authorization: Bearer $HALO_DASHBOARD_JWT" \\
   -H "Content-Type: application/json" \\
   -d '{
     "name": "Schedule Service",
     "description": "Plans and updates calendar events.",
     "image": "https://service.example.com/icon.png",
-    "services": [
+    "interfaces": [
       {
         "name": "Schedule",
         "endpoint": "https://service.example.com/runtime",
@@ -68,24 +68,24 @@ export const servicePages: DocPageMap = {
             [<code key="name">name</code>, "Human-readable service name"],
             [<code key="description">description</code>, "Capability summary"],
             [<code key="image">image</code>, "Public service artwork"],
-            [<code key="services">services[]</code>, "Runtime endpoints and capability metadata"],
+            [<code key="interfaces">interfaces[]</code>, "Runtime endpoints and capability metadata"],
             [<code key="x402">x402Support</code>, "Declares compatible payment behavior"],
             [<code key="dns">dnsDomain</code>, "Optional domain ownership proof"],
           ]}
         />
-        <Callout kind="info" title="Current API compatibility name">
+        <Callout kind="info" title="Service-native API">
           <p>
-            The product calls these records <strong>Services</strong>. The current
-            production REST route retains <code>/api/v1/agents</code> for
-            compatibility while the registry schema migrates to Service naming.
+            Services are first-class records at <code>/api/v1/services</code>.
+            ERC-8004 is an optional identity extension and does not change the
+            Service API path.
           </p>
         </Callout>
 
         <H2 id="create">Create a registry draft</H2>
         <Code language="bash" label="cURL" code={createService} />
-        <Endpoint method="GET" path="/api/v1/agents" />
-        <Endpoint method="GET" path="/api/v1/agents/:id" />
-        <Endpoint method="POST" path="/api/v1/agents/:id/dns/verify" />
+        <Endpoint method="GET" path="/api/v1/services" />
+        <Endpoint method="GET" path="/api/v1/services/:id" />
+        <Endpoint method="POST" path="/api/v1/services/:id/dns/verify" />
 
         <H2 id="metadata">Metadata</H2>
         <p>
@@ -96,7 +96,7 @@ export const servicePages: DocPageMap = {
         </p>
         <Endpoint
           method="GET"
-          path="/api/v1/agents/:id/metadata.json"
+          path="/api/v1/services/:id/metadata.json"
           description="Public, no-store metadata for a registered identity."
         />
 
@@ -117,9 +117,9 @@ export const servicePages: DocPageMap = {
             {
               title: "Connected accounts",
               description:
-                "Preview the future access-grant boundary for installed services.",
+                "Connect project-scoped external accounts without exposing provider tokens.",
               href: "/services/connected-accounts",
-              eyebrow: "PREVIEW",
+              eyebrow: "LIVE",
             },
           ]}
         />
@@ -187,19 +187,19 @@ export const servicePages: DocPageMap = {
         />
         <Endpoint
           method="POST"
-          path="/api/v1/agents/:id/erc8004/prepare-register"
+          path="/api/v1/services/:id/erc8004/prepare-register"
         />
         <Endpoint
           method="POST"
-          path="/api/v1/agents/:id/erc8004/confirm-register"
+          path="/api/v1/services/:id/erc8004/confirm-register"
         />
         <Endpoint
           method="POST"
-          path="/api/v1/agents/:id/erc8004/prepare-set-uri"
+          path="/api/v1/services/:id/erc8004/prepare-set-uri"
         />
         <Endpoint
           method="POST"
-          path="/api/v1/agents/:id/erc8004/confirm-uri"
+          path="/api/v1/services/:id/erc8004/confirm-uri"
         />
 
         <H2 id="owner-proof">Owner proof</H2>
@@ -239,7 +239,7 @@ export const servicePages: DocPageMap = {
   ],
   "supportedTrust": ["identity-reference"],
   "halo": {
-    "canonicalAgentId": "eip155:{chainId}:{registryAddress}:{tokenId}",
+    "canonicalServiceId": "eip155:{chainId}:{registryAddress}:{tokenId}",
     "metadataHost": {
       "provider": "agihalo",
       "managed": true,
@@ -262,7 +262,7 @@ export const servicePages: DocPageMap = {
 
   "services/connected-accounts": {
     toc: [
-      { id: "status", label: "Preview status" },
+      { id: "status", label: "Live API" },
       { id: "initial", label: "Initial project-isolated mode" },
       { id: "portable", label: "Portable mode" },
       { id: "custody", label: "Token custody" },
@@ -270,21 +270,41 @@ export const servicePages: DocPageMap = {
     ],
     content: (
       <>
-        <Callout kind="warning" title="Not available in the production API">
+        <Callout kind="info" title="Project-scoped connection API">
           <p>
-            This page documents the intended boundary for the connected-account
-            layer. Do not build against OAuth connection routes until HALO marks
-            them Live and publishes their final endpoint contract.
+            These routes use the Memory Project API key. OAuth client secrets and
+            provider tokens are encrypted server-side; responses never return
+            either secret.
           </p>
         </Callout>
 
-        <H2 id="status">Preview status</H2>
+        <H2 id="status">Live API</H2>
         <p>
           Connected accounts are separate from Project Authentication. Project
           Authentication proves who an application user is; connected accounts
           hold permission to act on an external resource such as a calendar or
           messaging workspace.
         </p>
+        <Endpoint
+          method="GET"
+          path="/api/v1/memory/projects/:projectKey/connectors"
+        />
+        <Endpoint
+          method="GET"
+          path="/api/v1/memory/projects/:projectKey/oauth/providers"
+        />
+        <Endpoint
+          method="PUT"
+          path="/api/v1/memory/projects/:projectKey/oauth/providers/:providerKey"
+        />
+        <Endpoint
+          method="GET"
+          path="/api/v1/memory/projects/:projectKey/oauth/return-uris"
+        />
+        <Endpoint
+          method="POST"
+          path="/api/v1/memory/projects/:projectKey/oauth/return-uris"
+        />
 
         <H2 id="initial">Initial project-isolated mode</H2>
         <Steps
@@ -322,6 +342,27 @@ export const servicePages: DocPageMap = {
               ),
             },
           ]}
+        />
+        <Endpoint
+          method="POST"
+          path="/api/v1/memory/projects/:projectKey/scopes/:scopeId/oauth/start"
+        />
+        <Endpoint
+          method="GET"
+          path="/api/v1/memory/oauth/callback/:providerKey"
+          description="Provider callback authenticated by one-time hashed state."
+        />
+        <Endpoint
+          method="GET"
+          path="/api/v1/memory/projects/:projectKey/oauth/sessions/:sessionId"
+        />
+        <Endpoint
+          method="GET"
+          path="/api/v1/memory/projects/:projectKey/scopes/:scopeId/connections"
+        />
+        <Endpoint
+          method="POST"
+          path="/api/v1/memory/projects/:projectKey/scopes/:scopeId/connections/:connectionId/refresh"
         />
 
         <H2 id="portable">Portable mode</H2>

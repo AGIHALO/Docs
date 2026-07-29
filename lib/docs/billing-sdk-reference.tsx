@@ -635,18 +635,18 @@ signature = tools.sign_payment(payment_requirement)`}
         <Endpoint method="GET" path="/api/v1/auth/oauth/userinfo" />
 
         <H2 id="registry">Service Registry</H2>
-        <Endpoint method="GET" path="/api/v1/agents" />
-        <Endpoint method="POST" path="/api/v1/agents" />
-        <Endpoint method="GET" path="/api/v1/agents/:id" />
-        <Endpoint method="GET" path="/api/v1/agents/:id/metadata.json" />
-        <Endpoint method="POST" path="/api/v1/agents/:id/dns/verify" />
+        <Endpoint method="GET" path="/api/v1/services" />
+        <Endpoint method="POST" path="/api/v1/services" />
+        <Endpoint method="GET" path="/api/v1/services/:id" />
+        <Endpoint method="GET" path="/api/v1/services/:id/metadata.json" />
+        <Endpoint method="POST" path="/api/v1/services/:id/dns/verify" />
         <Endpoint
           method="POST"
-          path="/api/v1/agents/:id/erc8004/prepare-register"
+          path="/api/v1/services/:id/erc8004/prepare-register"
         />
         <Endpoint
           method="POST"
-          path="/api/v1/agents/:id/erc8004/confirm-register"
+          path="/api/v1/services/:id/erc8004/confirm-register"
         />
 
         <H2 id="account">Account & Keeper</H2>
