@@ -44,7 +44,7 @@ const deepSeekCurl = `curl https://api.agihalo.com/deepseek/v1/chat/completions 
     "messages": [{"role": "user", "content": "Hello from HALO"}]
   }'`;
 
-const openSourceCurl = `curl https://api.agihalo.com/open-source/v1/chat/completions \\
+const openSourceCurl = `curl https://api.agihalo.com/qwen/v1/chat/completions \\
   -H "Authorization: Bearer $HALO_API_KEY" \\
   -H "Content-Type: application/json" \\
   -d '{
@@ -108,9 +108,14 @@ export const modelGatewayPages: DocPageMap = {
               "Chat Completions",
             ],
             [
-              "Open-source",
-              <code key="s">https://api.agihalo.com/open-source/v1</code>,
-              "OpenAI-compatible",
+              "Chat Completions SDK",
+              <code key="s">https://api.agihalo.com/v1</code>,
+              "OpenAI, DeepSeek, and open families by model ID",
+            ],
+            [
+              "Open model family",
+              <code key="sf">https://api.agihalo.com/{"{family}"}/v1</code>,
+              "Family-bound Chat Completions",
             ],
           ]}
         />
@@ -376,6 +381,26 @@ const message = await client.messages.create({
         </p>
         <H2 id="request">Make a request</H2>
         <Code language="bash" label="cURL" code={openSourceCurl} />
+        <Code
+          language="typescript"
+          label="OpenAI SDK — single model endpoint"
+          code={`import OpenAI from "openai";
+
+const client = new OpenAI({
+  apiKey: process.env.HALO_API_KEY,
+  baseURL: "https://api.agihalo.com/v1",
+});
+
+const response = await client.chat.completions.create({
+  model: "qwen/qwen3.6-35b-a3b",
+  messages: [{ role: "user", content: "Reply with OK" }],
+});`}
+        />
+        <p>
+          This SDK base URL accepts configured OpenAI and official DeepSeek
+          model IDs as well as listed open-model IDs. HALO selects exactly one
+          runtime from the canonical <code>model</code> value.
+        </p>
 
         <H2 id="contract">Runtime contract</H2>
         <ul>
@@ -403,6 +428,16 @@ const message = await client.messages.create({
           DeepSeek, Kimi, Mistral, Gemma, GLM, MiniMax, Nemotron, MiMo, GPT-OSS,
           and AllenAI families. Use the dashboard&apos;s Models page for the
           current project-visible IDs.
+        </p>
+        <p>
+          Family-bound base URLs are <code>/qwen/v1</code>,
+          <code>/llama/v1</code>, <code>/deepseek/v1</code>,
+          <code>/kimi/v1</code>, <code>/mistral/v1</code>,
+          <code>/gemma/v1</code>, <code>/glm/v1</code>,
+          <code>/minimax/v1</code>, <code>/nemotron/v1</code>,
+          <code>/mimo/v1</code>, <code>/gpt-oss/v1</code>, and
+          <code>/allenai/v1</code>. A family URL rejects a canonical model ID
+          belonging to another family.
         </p>
 
         <H2 id="keeper">Supplying inference</H2>
