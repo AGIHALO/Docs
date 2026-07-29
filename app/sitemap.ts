@@ -9,7 +9,7 @@ import {
 export const dynamic = "force-static";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const updated = new Date("2026-07-28T00:00:00.000Z");
+  const updated = new Date("2026-07-29T00:00:00.000Z");
   return DOC_ENTRIES.flatMap((entry) => {
     const languages = Object.fromEntries(
       DOCS_LOCALE_OPTIONS.map((option) => [

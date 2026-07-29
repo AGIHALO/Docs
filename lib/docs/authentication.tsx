@@ -34,7 +34,7 @@ const refreshCurl = `curl -X POST \\
   -H "apikey: $HALO_PROJECT_PUBLISHABLE_KEY" \\
   -H "Content-Type: application/json" \\
   -d '{
-    "refresh_token": "halo_auth_rt_..."
+    "refresh_token": "halo_rt_..."
   }'`;
 
 const providerAuthorize = `// 1. Create an S256 PKCE verifier/challenge in your app.
@@ -184,6 +184,12 @@ export const authenticationPages: DocPageMap = {
         <H2 id="choose">Choose the next guide</H2>
         <FeatureGrid
           items={[
+            {
+              title: "Auth AGENTS.md",
+              description:
+                "Give a coding agent the complete secure integration contract.",
+              href: "/authentication/agent-md",
+            },
             {
               title: "Email & Resend",
               description:
@@ -457,7 +463,7 @@ export const authenticationPages: DocPageMap = {
           headers={["Token", "Format", "Use"]}
           rows={[
             ["Access token", "RS256 JWT", "Call user-protected application APIs"],
-            ["Refresh token", "Opaque halo_auth_rt_…", "Rotate the session"],
+            ["Refresh token", "Opaque halo_rt_…", "Rotate the session"],
             ["Provider login code", "One-time opaque code", "Complete social sign-in"],
             ["OAuth App token", "RS256 JWT + opaque refresh", "Service-scoped access"],
           ]}

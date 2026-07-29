@@ -1,4 +1,5 @@
 import { authenticationPages } from "./authentication";
+import { authAgentPages } from "./auth-agent";
 import { billingSdkReferencePages } from "./billing-sdk-reference";
 import { memoryPages } from "./memory";
 import { modelGatewayPages } from "./model-gateway";
@@ -13,6 +14,7 @@ export const DOC_PAGES: DocPageMap = {
   ...modelGatewayPages,
   ...memoryPages,
   ...authenticationPages,
+  ...authAgentPages,
   ...servicePages,
   ...billingSdkReferencePages,
 };

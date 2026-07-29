@@ -132,6 +132,13 @@ export const NAV_GROUPS: NavGroup[] = [
         keywords: ["auth", "users", "publishable key"],
       },
       {
+        slug: "authentication/agent-md",
+        title: "Auth AGENTS.md",
+        description: "Copy a production-ready integration contract into your coding agent.",
+        group: "Authentication",
+        keywords: ["agent", "AGENTS.md", "copy", "integration", "AI"],
+      },
+      {
         slug: "authentication/email",
         title: "Email & Resend",
         description: "Email/password, confirmation, recovery, and templates.",
