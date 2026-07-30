@@ -75,22 +75,20 @@ memory.capture(
     },
 )`;
 
-const nodeAuthentication = `import {
-  HaloAuthClient,
-  HaloOAuthClient,
-} from "agihalo-node-sdk";
+const nodeAuthentication = `import { createClient } from "agihalo-node-sdk/auth";
+import { HaloOAuthClient } from "agihalo-node-sdk";
 
 // OEM or application user Authentication.
-const auth = new HaloAuthClient({
-  publishableKey: HALO_PROJECT_PUBLISHABLE_KEY,
-});
-
-const session = await auth.signInWithPassword(
-  "user@example.com",
-  "Secret123!"
+const halo = createClient(
+  "https://api.agihalo.com",
+  HALO_PROJECT_PUBLISHABLE_KEY
 );
-const refreshed = await auth.refreshSession(session.refresh_token);
-const user = await auth.getUser(refreshed.access_token);
+const { data, error } = await halo.auth.signInWithPassword({
+  email: "user@example.com",
+  password: "Secret123!",
+});
+if (error) throw error;
+const { data: user } = await halo.auth.getUser();
 
 // Service-side OAuth App client.
 const oauth = new HaloOAuthClient({
@@ -103,18 +101,18 @@ const tokens = await oauth.exchangeCode(
   "https://service.example.com/callback"
 );`;
 
-const pythonAuthentication = `from halo import HaloAuthClient, HaloOAuthClient
+const pythonAuthentication = `from halo import create_client, HaloOAuthClient
 
 # OEM or application user Authentication.
-auth = HaloAuthClient(
-    publishable_key=HALO_PROJECT_PUBLISHABLE_KEY,
+halo = create_client(
+    "https://api.agihalo.com",
+    HALO_PROJECT_PUBLISHABLE_KEY,
 )
-session = auth.sign_in_with_password(
-    "user@example.com",
-    "Secret123!",
-)
-refreshed = auth.refresh_session(session["refresh_token"])
-user = auth.get_user(refreshed["access_token"])
+session = halo.auth.sign_in_with_password({
+    "email": "user@example.com",
+    "password": "Secret123!",
+})
+user = halo.auth.get_user()
 
 # Service-side OAuth App client.
 oauth = HaloOAuthClient(
@@ -321,11 +319,11 @@ const result = await paidModel.generateContent("Continue the task");`}
           code={nodeAuthentication}
         />
         <p>
-          <code>HaloAuthClient</code> uses a Project publishable key for
-          application-user signup, password sessions, refresh rotation, user
-          lookup, password recovery, and upstream provider PKCE flows.
+          <code>createClient(...).auth</code> uses a Project publishable key for
+          application-user signup, managed password sessions, refresh rotation,
+          user lookup, password recovery, and upstream provider PKCE flows.
           <code>HaloOAuthClient</code> is for Services registered as OAuth Apps.
-          It does not store returned tokens.
+          The OAuth App client does not store returned tokens.
         </p>
         <Callout kind="warning" title="Keep confidential secrets server-side">
           <p>
@@ -439,7 +437,9 @@ const signature = await tools.signPayment(paymentRequirement);`}
         />
         <p>
           The Python clients expose the same Project-user and Service OAuth
-          boundaries as the Node.js SDK and never persist returned tokens.
+          boundaries as the Node.js SDK. Project sessions stay in memory by
+          default and may use one explicit storage adapter; Service OAuth tokens
+          remain caller-managed.
         </p>
 
         <H2 id="memory">Memory client</H2>
@@ -543,7 +543,7 @@ signature = tools.sign_payment(payment_requirement)`}
           rows={[
             ["Client API key", <code key="sk">sk-…</code>, "Model Gateway, Memory"],
             ["Publishable key", <code key="pk">apikey: …</code>, "Public Project Authentication"],
-            ["Project user access", <code key="user">Bearer eyJ…</code>, "Current user, logout, OAuth consent"],
+            ["Project user access", <code key="user">apikey + Bearer eyJ…</code>, "Current user and logout; bearer-only OAuth consent"],
             ["OAuth App access", <code key="oauth">Bearer eyJ…</code>, "OAuth userinfo and service scopes"],
             ["Dashboard owner JWT", <code key="owner">Bearer …</code>, "Project configuration and management"],
           ]}
@@ -560,14 +560,16 @@ signature = tools.sign_payment(payment_requirement)`}
           Send it in <code>apikey</code> or
           <code>x-halo-project-key</code>. Navigation to a provider authorize
           endpoint may carry <code>?apikey=</code> because a browser redirect
-          cannot add a custom header.
+          cannot add a custom header. The key is public application identity,
+          equivalent to a Supabase publishable key; it is not a client secret.
         </p>
 
         <H2 id="bearer">Project user bearer token</H2>
         <p>
           The RS256 access token represents one Authentication user and one
-          session. Verify it with the project JWKS and required claims. Do not use
-          it as a model-spending key.
+          session. Current-user and logout calls must include both this bearer
+          token and the matching Project publishable key. Verify it with the
+          project JWKS and required claims. Do not use it as a model-spending key.
         </p>
 
         <H2 id="owner">Dashboard owner JWT</H2>

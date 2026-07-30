@@ -19,9 +19,9 @@ Do not invent missing values. Before editing, locate or ask for:
   Microsoft providers.
 
 The project publishable key may be exposed to the browser. HALO account API
-keys, Resend keys, provider client secrets, OAuth App secrets, and refresh
-tokens must never be exposed in client bundles, logs, URLs, analytics, or error
-messages.
+keys, Resend keys, provider client secrets, and OAuth App secrets must never be
+exposed in client bundles. Access and refresh tokens are user bearer
+credentials: keep them out of logs, URLs, analytics, and error messages.
 
 ## Source of truth
 
@@ -33,6 +33,20 @@ messages.
 
 Do not substitute Supabase, Firebase, Auth0, or another provider SDK. Do not
 invent endpoints or response fields.
+
+For TypeScript or browser applications, prefer:
+
+~~~typescript
+import { createClient } from "agihalo-node-sdk/auth";
+
+const halo = createClient(
+  "https://api.agihalo.com",
+  HALO_PROJECT_PUBLISHABLE_KEY
+);
+~~~
+
+Use `halo.auth` for the supported session flows instead of reimplementing
+header injection, refresh rotation, or PKCE.
 
 ## HTTP contract
 
@@ -113,8 +127,11 @@ When email confirmation is required, signup returns:
 GET /user and POST /logout require:
 
 ~~~http
+apikey: HALO_PROJECT_PUBLISHABLE_KEY
 Authorization: Bearer PROJECT_USER_ACCESS_TOKEN
 ~~~
+
+The publishable key and JWT must belong to the same Project.
 
 Errors use an HTTP status plus:
 
@@ -132,24 +149,25 @@ Never treat HTTP 401, 403, 429, or 503 as a successful empty session.
 1. Inspect the repository before changing it. Reuse its router, HTTP client,
    schema validator, state management, form controls, error UI, test runner,
    and naming conventions.
-2. Add one typed HALO Auth client. Keep the base URL and publishable key in one
-   configuration boundary. Reject startup or build when the publishable key is
-   missing; do not use a placeholder fallback.
+2. Add one typed HALO client with `createClient(baseUrl, publishableKey)`. Keep
+   that initialization in one configuration boundary. Reject startup or build
+   when the publishable key is missing; do not use a placeholder fallback.
 3. Read GET /settings and render only flows enabled for the project. Enforce the
    returned minimum password length and password requirements in the UI, while
    still handling server validation errors.
 4. Implement signup, password sign-in, current-user loading, refresh, logout,
    confirmation handling, and recovery routes that match the application's
    existing UX.
-5. Keep the access token in memory. In an application with a server or BFF,
-   store the refresh token only in a Secure, HttpOnly, SameSite=Lax,
-   application-owned cookie and proxy refresh/logout through same-origin
-   handlers. Validate Origin and apply CSRF protection to cookie-authenticated,
-   state-changing BFF handlers. Do not put refresh tokens in localStorage,
-   sessionStorage, readable cookies, IndexedDB, URLs, or logs.
-6. If this is a browser-only static application with no secure server boundary,
-   stop and report that secure persistent sessions require a BFF. Do not add an
-   insecure storage fallback.
+5. Match the application architecture explicitly:
+   - For a browser SPA, use the SDK's default managed browser session, as with a
+     Supabase client. Apply a strict CSP, avoid unsafe HTML execution, keep
+     dependencies current, and never copy tokens into application logs or URLs.
+   - For an application with a server or BFF, set `persistSession: false` and
+     keep the refresh token in a Secure, HttpOnly, SameSite=Lax,
+     application-owned cookie. Proxy refresh/logout through same-origin
+     handlers, validate Origin, and apply CSRF protection.
+6. Do not create a second ad hoc token store alongside the SDK. If custom
+   persistence is required, pass one audited storage adapter to the client.
 7. Refresh tokens rotate. After every successful refresh, atomically replace
    the stored refresh token with the returned refresh_token. Never reuse the
    previous value. Deduplicate concurrent refresh attempts with one in-flight
@@ -207,8 +225,8 @@ upstream provider client secret in the application frontend.
 - GET /user resolves the signed-in project user.
 - Logout revokes and clears the session.
 - Protected routes do not render for signed-out users.
-- No sensitive token appears in browser storage, URLs, logs, snapshots, or
-  committed files.
+- No sensitive token appears in URLs, logs, snapshots, or committed files.
+  Browser storage, when used, is owned only by the managed SDK session.
 - Unit or integration tests cover success, confirmation-required, refresh
   rotation, refresh failure, logout, and protected-route behavior.
 - Existing lint, typecheck, tests, and production build pass.

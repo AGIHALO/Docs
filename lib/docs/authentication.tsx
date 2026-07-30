@@ -37,6 +37,27 @@ const refreshCurl = `curl -X POST \\
     "refresh_token": "halo_rt_..."
   }'`;
 
+const currentUserCurl = `curl https://api.agihalo.com/api/v1/auth/user \\
+  -H "apikey: $HALO_PROJECT_PUBLISHABLE_KEY" \\
+  -H "Authorization: Bearer $PROJECT_USER_ACCESS_TOKEN"`;
+
+const sdkQuickstart = `import { createClient } from "agihalo-node-sdk/auth";
+
+const halo = createClient(
+  "https://api.agihalo.com",
+  HALO_PROJECT_PUBLISHABLE_KEY
+);
+
+const { data, error } = await halo.auth.signInWithPassword({
+  email: "user@example.com",
+  password: "use-a-strong-password",
+});
+
+if (error) throw error;
+
+// The SDK automatically sends apikey + Bearer <access_token>.
+const { data: currentUser } = await halo.auth.getUser();`;
+
 const providerAuthorize = `// 1. Create an S256 PKCE verifier/challenge in your app.
 const url = new URL(
   "https://api.agihalo.com/api/v1/auth/providers/google/authorize"
@@ -156,8 +177,9 @@ export const authenticationPages: DocPageMap = {
               title: "Create a user session",
               children: (
                 <p>
-                  Sign up or sign in, keep the access token short-lived, and rotate
-                  the refresh token through the token endpoint.
+                  Create the SDK client once, then sign up or sign in through
+                  <code>halo.auth</code>. The SDK persists the browser session
+                  and rotates refresh tokens automatically.
                 </p>
               ),
             },
@@ -166,11 +188,20 @@ export const authenticationPages: DocPageMap = {
         <Examples
           title="Email Authentication"
           examples={[
+            { label: "TypeScript SDK", language: "typescript", code: sdkQuickstart },
             { label: "Sign up", language: "bash", code: signupCurl },
             { label: "Sign in", language: "bash", code: passwordLoginCurl },
             { label: "Refresh", language: "bash", code: refreshCurl },
+            { label: "Current user", language: "bash", code: currentUserCurl },
           ]}
         />
+        <Callout kind="info" title="Two headers, one SDK client">
+          <p>
+            The publishable key identifies the Project. The access JWT identifies
+            the signed-in user. Current-user and logout requests require both;
+            the managed SDK attaches them automatically.
+          </p>
+        </Callout>
 
         <H2 id="public-api">Public API</H2>
         <Endpoint method="GET" path="/api/v1/auth/settings" />
@@ -495,11 +526,15 @@ export const authenticationPages: DocPageMap = {
         <Endpoint
           method="GET"
           path="/api/v1/auth/user"
-          description="Resolve a valid bearer access token to the current user."
+          description="Resolve a valid bearer access token to the current user. Send the matching Project publishable key as apikey."
         />
 
         <H2 id="revoke">Revocation</H2>
         <Endpoint method="POST" path="/api/v1/auth/logout" />
+        <p>
+          Logout also requires the matching Project publishable key and user
+          bearer token. The managed SDK sends both and clears its local session.
+        </p>
         <p>
           Project owners can also list active sessions and revoke an individual
           session from the dashboard. User ban or deletion makes future session

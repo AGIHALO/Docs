@@ -124,9 +124,10 @@ export const authAgentPages: DocPageMap = {
               title: "Review the security boundary",
               children: (
                 <p>
-                  Confirm that refresh tokens stay behind an HttpOnly
-                  application-owned cookie and are never written to browser
-                  storage or logs.
+                  Choose the managed browser session for an SPA, or disable
+                  persistence and place refresh tokens behind an HttpOnly
+                  application-owned cookie when a BFF is available. Never write
+                  tokens to logs or URLs.
                 </p>
               ),
             },
