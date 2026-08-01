@@ -16,6 +16,44 @@ const openAiCurl = `curl https://api.agihalo.com/openai/v1/chat/completions \\
     "messages": [{"role": "user", "content": "Hello from HALO"}]
   }'`;
 
+const openAiVisionCurl = `curl https://api.agihalo.com/openai/v1/chat/completions \\
+  -H "Authorization: Bearer $HALO_API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "model": "gpt-5.6",
+    "messages": [{
+      "role": "user",
+      "content": [
+        {"type": "text", "text": "Describe the important details."},
+        {
+          "type": "image_url",
+          "image_url": {
+            "url": "https://example.com/input.png",
+            "detail": "high"
+          }
+        }
+      ]
+    }]
+  }'`;
+
+const openAiImageGenerationCurl = `curl https://api.agihalo.com/openai/v1/images/generations \\
+  -H "Authorization: Bearer $HALO_API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "model": "gpt-image-2",
+    "prompt": "A glass observatory above a moonlit cloud layer",
+    "size": "1536x1024",
+    "quality": "high",
+    "output_format": "png"
+  }'`;
+
+const openAiImageEditCurl = `curl https://api.agihalo.com/openai/v1/images/edits \\
+  -H "Authorization: Bearer $HALO_API_KEY" \\
+  -F "model=gpt-image-2" \\
+  -F "prompt=Add a watercolor texture" \\
+  -F "image[]=@source.png" \\
+  -F "mask=@mask.png"`;
+
 const geminiCurl = `curl "https://api.agihalo.com/v1beta/models/gemini-3.5-flash:generateContent" \\
   -H "x-goog-api-key: $HALO_API_KEY" \\
   -H "Content-Type: application/json" \\
@@ -95,7 +133,7 @@ export const modelGatewayPages: DocPageMap = {
             [
               "OpenAI",
               <code key="o">https://api.agihalo.com/openai/v1</code>,
-              "Chat Completions",
+              "Chat Completions, vision, and GPT Image",
             ],
             [
               "Anthropic",
@@ -131,7 +169,8 @@ export const modelGatewayPages: DocPageMap = {
             },
             {
               title: "OpenAI",
-              description: "Chat Completions with OpenAI client compatibility.",
+              description:
+                "Chat, vision, image generation, and image editing with OpenAI client compatibility.",
               href: "/model-gateway/openai",
             },
             {
@@ -230,16 +269,49 @@ export const modelGatewayPages: DocPageMap = {
 
   "model-gateway/openai": {
     toc: [
+      { id: "models", label: "Models" },
       { id: "request", label: "Make a request" },
       { id: "sdk", label: "OpenAI SDK" },
+      { id: "vision", label: "Vision input" },
+      { id: "images", label: "Generate & edit images" },
+      { id: "restrictions", label: "Restrictions" },
       { id: "behavior", label: "Gateway behavior" },
     ],
     content: (
       <>
         <p>
-          HALO&apos;s OpenAI entrypoint accepts Chat Completions at
-          <code>/openai/v1/chat/completions</code>.
+          HALO&apos;s OpenAI entrypoint accepts Chat Completions, vision input,
+          GPT Image generations, and GPT Image edits under
+          <code>/openai/v1</code>. The same image routes are also available at
+          the canonical <code>/v1</code> SDK base.
         </p>
+
+        <H2 id="models">Models</H2>
+        <DataTable
+          headers={["Capability", "Production model IDs"]}
+          rows={[
+            [
+              "Latest chat and vision",
+              "gpt-5.6 (Sol alias), gpt-5.6-sol, gpt-5.6-terra, gpt-5.6-luna, gpt-5.5",
+            ],
+            [
+              "Other chat and vision",
+              "gpt-5.4, gpt-5.4-mini, gpt-5.4-nano, gpt-5.2, gpt-5.1, retained GPT-5/GPT-4.1/GPT-4o/o3/o4-mini models",
+            ],
+            [
+              "Image generation and editing",
+              "gpt-image-2, gpt-image-1.5, gpt-image-1-mini, gpt-image-1, chatgpt-image-latest",
+            ],
+          ]}
+        />
+        <Callout kind="info" title="Responses-only Pro models">
+          <p>
+            Pro models may appear in pricing references, but Responses-API-only
+            models are not advertised on HALO Chat Completions. HALO does not
+            silently substitute another endpoint or model.
+          </p>
+        </Callout>
+
         <H2 id="request">Make a request</H2>
         <Code language="bash" label="cURL" code={openAiCurl} />
 
@@ -280,12 +352,77 @@ result = client.chat.completions.create(
           ]}
         />
 
+        <H2 id="vision">Vision input</H2>
+        <p>
+          OpenAI image blocks are accepted in user messages as credential-free
+          HTTPS URLs or inline base64 image data URLs. The selected model must
+          declare image-input support.
+        </p>
+        <Code language="bash" label="Vision request" code={openAiVisionCurl} />
+        <p>
+          Image detail can be <code>auto</code>, <code>low</code>, or
+          <code>high</code>. <code>original</code> is limited to the base
+          GPT-5.4, GPT-5.5, and GPT-5.6 models that expose that capability.
+        </p>
+
+        <H2 id="images">Generate &amp; edit images</H2>
+        <Code
+          language="bash"
+          label="Generate with GPT Image"
+          code={openAiImageGenerationCurl}
+        />
+        <Code
+          language="bash"
+          label="Multipart image edit"
+          code={openAiImageEditCurl}
+        />
+        <p>
+          Image edits accept one to sixteen JSON HTTPS/data-URL references or
+          multipart <code>image</code>/<code>image[]</code> uploads, plus one
+          optional mask. Generation and edit streams are forwarded without
+          buffering the returned base64 payload.
+        </p>
+
+        <H2 id="restrictions">Restrictions</H2>
+        <ul>
+          <li>
+            OpenAI <code>file_id</code> values are account-bound and unavailable
+            on shared HALO platform routes. Upload the file or use an HTTPS/data
+            URL.
+          </li>
+          <li>JSON and multipart image request bodies are capped at 64 MB.</li>
+          <li>
+            Provider-owned files, caches, conversations, tools, unsafe URLs,
+            unknown fields, and unsupported capabilities fail closed.
+          </li>
+          <li>DeepSeek and custom model-family routes remain text-only.</li>
+        </ul>
+
         <H2 id="behavior">Gateway behavior</H2>
         <p>
           The gateway validates a priced model, selects an eligible platform key,
           forwards the canonical request, parses upstream usage, and bills the
-          completed response. Authentication errors use an OpenAI-style error
-          envelope.
+          completed response. GPT Image billing records provider-reported text
+          input, image input, image output, and generated image count.
+          Authentication errors use an OpenAI-style error envelope.
+        </p>
+        <p>
+          See the current upstream references for
+          {" "}
+          <a href="https://developers.openai.com/api/docs/models" target="_blank" rel="noreferrer">
+            models
+          </a>
+          ,
+          {" "}
+          <a href="https://developers.openai.com/api/docs/pricing" target="_blank" rel="noreferrer">
+            pricing
+          </a>
+          , and
+          {" "}
+          <a href="https://developers.openai.com/api/docs/guides/image-generation" target="_blank" rel="noreferrer">
+            image generation
+          </a>
+          .
         </p>
       </>
     ),
@@ -476,7 +613,10 @@ const response = await client.chat.completions.create({
           headers={["Vendor", "Examples"]}
           rows={[
             ["Gemini", "Gemini 3.x, Imagen, Veo"],
-            ["OpenAI", "GPT-5, GPT-4.1, GPT-4o, o3/o4"],
+            [
+              "OpenAI",
+              "GPT-5.6/5.5/5.4, GPT-4.1/4o, o3/o4, GPT Image 2/1.x",
+            ],
             ["Anthropic", "Claude Fable, Opus, Sonnet, Haiku"],
             ["DeepSeek", "Chat and Reasoner"],
             ["Open-source", "Qwen, Llama, Kimi, Mistral, Gemma, and more"],

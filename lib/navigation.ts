@@ -60,7 +60,7 @@ export const NAV_GROUPS: NavGroup[] = [
       {
         slug: "model-gateway/openai",
         title: "OpenAI",
-        description: "OpenAI chat completions through HALO.",
+        description: "OpenAI chat, vision, and GPT Image APIs through HALO.",
         group: "Model Gateway",
       },
       {

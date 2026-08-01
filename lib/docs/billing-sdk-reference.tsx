@@ -603,9 +603,13 @@ signature = tools.sign_payment(payment_requirement)`}
         <Endpoint method="POST" path="/v1beta/models/:model:streamGenerateContent" />
         <Endpoint method="POST" path="/v1beta/models/:model:predictLongRunning" />
         <Endpoint method="POST" path="/openai/v1/chat/completions" />
+        <Endpoint method="POST" path="/openai/v1/images/generations" />
+        <Endpoint method="POST" path="/openai/v1/images/edits" />
         <Endpoint method="POST" path="/claude/v1/messages" />
         <Endpoint method="POST" path="/deepseek/v1/chat/completions" />
         <Endpoint method="POST" path="/v1/chat/completions" />
+        <Endpoint method="POST" path="/v1/images/generations" />
+        <Endpoint method="POST" path="/v1/images/edits" />
         <Endpoint method="POST" path="/:family/v1/chat/completions" />
 
         <H2 id="memory">Memory</H2>
