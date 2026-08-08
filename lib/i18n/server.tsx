@@ -47,6 +47,51 @@ const REVIEWED_OVERRIDES: Record<
     ". Keep the required": " 헤더로 전송하고, 필수 ",
     "A 402 is actionable": "402 응답은 해결할 수 있습니다",
     "Anthropic": "Anthropic",
+    "Base pricing": "기본 가격",
+    "Billing notes": "과금 참고사항",
+    "Cache write": "캐시 쓰기",
+    "Cached input": "캐시 입력",
+    "Cached image input": "캐시 이미지 입력",
+    "Cached text input": "캐시 텍스트 입력",
+    "Current base rates for supported model families.":
+      "지원되는 모델 계열의 현재 기본 가격입니다.",
+    "Google Gemini": "Google Gemini",
+    "How to read prices": "가격표 읽는 법",
+    "Input": "입력",
+    "Image input": "이미지 입력",
+    "Image output": "이미지 출력",
+    "Imagen · per generated image": "Imagen · 생성 이미지당",
+    "Media generation": "미디어 생성",
+    "OpenAI GPT Image": "OpenAI GPT Image",
+    "Output": "출력",
+    "Price": "가격",
+    "Text input": "텍스트 입력",
+    "Text output": "텍스트 출력",
+    "Uncached input": "비캐시 입력",
+    "USD per 1M tokens": "100만 토큰당 USD",
+    "Veo · USD per generated second": "Veo · 생성 초당 USD",
+    "These base rates mirror the HALO production pricing catalog checked on August 1, 2026. Text prices are in USD per 1 million tokens.":
+      "이 기본 가격은 2026년 8월 1일에 확인한 HALO 프로덕션 가격 카탈로그와 동일합니다. 텍스트 가격 단위는 100만 토큰당 USD입니다.",
+    "Token rates are metered separately by the usage categories shown in each table. Paired values show standard and long-context rates in that order.":
+      "토큰 가격은 각 표에 표시된 사용량 항목별로 별도 측정됩니다. 두 가격이 표시된 경우 표준 컨텍스트와 장문 컨텍스트 가격 순서입니다.",
+    "Paired Gemini rates apply at up to 200,000 input tokens and above 200,000 input tokens.":
+      "Gemini의 두 가격은 입력 토큰 20만 이하와 20만 초과 구간에 각각 적용됩니다.",
+    "OpenAI Chat Completions reports cached input separately. All remaining prompt input is billed at the uncached-input rate. Paired rates apply at up to 272,000 input tokens and above 272,000 input tokens.":
+      "OpenAI Chat Completions는 캐시 입력을 별도로 보고합니다. 나머지 모든 프롬프트 입력에는 비캐시 입력 단가가 적용됩니다. 두 가격은 입력 토큰 27만 2천 이하와 초과 구간에 각각 적용됩니다.",
+    "GPT Image rates are in USD per 1 million tokens and are metered separately by text and image modality.":
+      "GPT Image 가격 단위는 100만 토큰당 USD이며 텍스트와 이미지 모달리티별로 각각 측정됩니다.",
+    "A dash means that resolution is unavailable and is rejected before provider dispatch.":
+      "대시는 해당 해상도를 사용할 수 없으며 공급자 전송 전에 요청이 거부된다는 뜻입니다.",
+    "Open-source rates are HALO catalog rates for the listed runtime pool. Project visibility and healthy provider capacity still apply.":
+      "오픈소스 가격은 표시된 런타임 풀의 HALO 카탈로그 가격입니다. 프로젝트 공개 범위와 정상 공급자 용량 조건은 그대로 적용됩니다.",
+    "Batch, Flex, Priority, and regional processing tiers are not listed.":
+      "Batch, Flex, Priority 및 지역별 처리 가격은 이 표에 포함되지 않습니다.",
+    "Search, cache storage, and modality-specific audio, image, or video token rates can add separate usage.":
+      "검색, 캐시 저장소, 오디오·이미지·비디오 모달리티별 토큰 가격은 별도 사용량으로 추가될 수 있습니다.",
+    "The completed upstream usage and the billing snapshot attached to the request determine the final debit.":
+      "최종 차감액은 완료된 업스트림 사용량과 요청에 연결된 과금 스냅샷을 기준으로 결정됩니다.",
+    "Use the dashboard Models page for the current project-visible catalog.":
+      "현재 프로젝트에서 사용할 수 있는 카탈로그는 대시보드의 모델 페이지에서 확인하세요.",
     "Email & Resend": "이메일 & Resend",
     "HALO gives one project-scoped key access to provider-native model APIs, long-term Memory, Authentication, service identity, and usage controls. This quickstart sends a first OpenAI-compatible model request.":
       "HALO에서는 프로젝트 범위 키 하나로 공급자 네이티브 모델 API, 장기 메모리, 인증, 서비스 ID, 사용량 제어 기능을 이용할 수 있습니다. 이 빠른 시작 가이드에서는 첫 번째 OpenAI 호환 모델 요청을 전송합니다.",
@@ -74,6 +119,51 @@ const REVIEWED_OVERRIDES: Record<
   zh: {
     ". Keep the required": " 标头中发送 HALO 密钥，并保留必需的 ",
     "A 402 is actionable": "可以处理 402 响应",
+    "Base pricing": "基础价格",
+    "Billing notes": "计费说明",
+    "Cache write": "缓存写入",
+    "Cached input": "缓存输入",
+    "Cached image input": "缓存图片输入",
+    "Cached text input": "缓存文本输入",
+    "Current base rates for supported model families.":
+      "受支持模型系列的当前基础价格。",
+    "Google Gemini": "Google Gemini",
+    "How to read prices": "价格说明",
+    "Input": "输入",
+    "Image input": "图片输入",
+    "Image output": "图片输出",
+    "Imagen · per generated image": "Imagen · 每张生成图片",
+    "Media generation": "媒体生成",
+    "OpenAI GPT Image": "OpenAI GPT Image",
+    "Output": "输出",
+    "Price": "价格",
+    "Text input": "文本输入",
+    "Text output": "文本输出",
+    "Uncached input": "非缓存输入",
+    "USD per 1M tokens": "每 100 万 token 的美元价格",
+    "Veo · USD per generated second": "Veo · 每生成秒的美元价格",
+    "These base rates mirror the HALO production pricing catalog checked on August 1, 2026. Text prices are in USD per 1 million tokens.":
+      "这些基础价格与 2026 年 8 月 1 日核对的 HALO 生产价格目录一致。文本价格单位为每 100 万 token 的美元价格。",
+    "Token rates are metered separately by the usage categories shown in each table. Paired values show standard and long-context rates in that order.":
+      "Token 价格按各表所列的用量类别分别计量。成对价格依次表示标准上下文和长上下文价格。",
+    "Paired Gemini rates apply at up to 200,000 input tokens and above 200,000 input tokens.":
+      "Gemini 的成对价格分别适用于不超过 20 万和超过 20 万输入 token。",
+    "OpenAI Chat Completions reports cached input separately. All remaining prompt input is billed at the uncached-input rate. Paired rates apply at up to 272,000 input tokens and above 272,000 input tokens.":
+      "OpenAI Chat Completions 会单独报告缓存输入，其余所有提示输入均按非缓存输入价格计费。成对价格分别适用于不超过 27.2 万和超过 27.2 万输入 token。",
+    "GPT Image rates are in USD per 1 million tokens and are metered separately by text and image modality.":
+      "GPT Image 价格单位为每 100 万 token 的美元价格，并按文本和图片模态分别计量。",
+    "A dash means that resolution is unavailable and is rejected before provider dispatch.":
+      "破折号表示该分辨率不可用，请求会在发送给提供商之前被拒绝。",
+    "Open-source rates are HALO catalog rates for the listed runtime pool. Project visibility and healthy provider capacity still apply.":
+      "开源价格是所列运行时池的 HALO 目录价格，并仍受项目可见性和健康提供商容量限制。",
+    "Batch, Flex, Priority, and regional processing tiers are not listed.":
+      "本表未列出 Batch、Flex、Priority 和区域处理价格。",
+    "Search, cache storage, and modality-specific audio, image, or video token rates can add separate usage.":
+      "搜索、缓存存储以及音频、图片或视频模态专用 token 价格可能产生额外用量。",
+    "The completed upstream usage and the billing snapshot attached to the request determine the final debit.":
+      "最终扣款由已完成的上游用量和请求所附的计费快照决定。",
+    "Use the dashboard Models page for the current project-visible catalog.":
+      "请在控制台的模型页面查看当前项目可见的目录。",
     "Email & Resend": "电子邮件与 Resend",
     "HALO gives one project-scoped key access to provider-native model APIs, long-term Memory, Authentication, service identity, and usage controls. This quickstart sends a first OpenAI-compatible model request.":
       "通过一个项目级密钥，HALO 即可访问提供商原生模型 API、长期记忆、身份验证、服务身份和用量控制。本快速入门将发送第一个与 OpenAI 兼容的模型请求。",
@@ -100,6 +190,51 @@ const REVIEWED_OVERRIDES: Record<
   ja: {
     ". Keep the required": " ヘッダーで送信し、必須の ",
     "A 402 is actionable": "402 応答には対処できます",
+    "Base pricing": "基本価格",
+    "Billing notes": "課金に関する注意",
+    "Cache write": "キャッシュ書き込み",
+    "Cached input": "キャッシュ入力",
+    "Cached image input": "キャッシュ済み画像入力",
+    "Cached text input": "キャッシュ済みテキスト入力",
+    "Current base rates for supported model families.":
+      "対応モデルファミリーの現在の基本価格です。",
+    "Google Gemini": "Google Gemini",
+    "How to read prices": "価格表の見方",
+    "Input": "入力",
+    "Image input": "画像入力",
+    "Image output": "画像出力",
+    "Imagen · per generated image": "Imagen · 生成画像 1 枚あたり",
+    "Media generation": "メディア生成",
+    "OpenAI GPT Image": "OpenAI GPT Image",
+    "Output": "出力",
+    "Price": "価格",
+    "Text input": "テキスト入力",
+    "Text output": "テキスト出力",
+    "Uncached input": "非キャッシュ入力",
+    "USD per 1M tokens": "100 万トークンあたりの USD",
+    "Veo · USD per generated second": "Veo · 生成 1 秒あたりの USD",
+    "These base rates mirror the HALO production pricing catalog checked on August 1, 2026. Text prices are in USD per 1 million tokens.":
+      "この基本価格は、2026 年 8 月 1 日に確認した HALO 本番価格カタログと一致しています。テキスト価格の単位は 100 万トークンあたりの USD です。",
+    "Token rates are metered separately by the usage categories shown in each table. Paired values show standard and long-context rates in that order.":
+      "トークン価格は各表に示す使用量区分ごとに個別計測されます。2 つの価格は標準コンテキスト、長文コンテキストの順です。",
+    "Paired Gemini rates apply at up to 200,000 input tokens and above 200,000 input tokens.":
+      "Gemini の 2 つの価格は、入力トークン 20 万以下と 20 万超にそれぞれ適用されます。",
+    "OpenAI Chat Completions reports cached input separately. All remaining prompt input is billed at the uncached-input rate. Paired rates apply at up to 272,000 input tokens and above 272,000 input tokens.":
+      "OpenAI Chat Completions はキャッシュ入力を個別に報告します。残りのすべてのプロンプト入力には非キャッシュ入力価格が適用されます。2 つの価格は入力トークン 27 万 2 千以下と超過時にそれぞれ適用されます。",
+    "GPT Image rates are in USD per 1 million tokens and are metered separately by text and image modality.":
+      "GPT Image の価格単位は 100 万トークンあたりの USD で、テキストと画像のモダリティごとに個別計測されます。",
+    "A dash means that resolution is unavailable and is rejected before provider dispatch.":
+      "ダッシュはその解像度を利用できず、プロバイダーへの送信前にリクエストが拒否されることを示します。",
+    "Open-source rates are HALO catalog rates for the listed runtime pool. Project visibility and healthy provider capacity still apply.":
+      "オープンソース価格は、掲載ランタイムプールの HALO カタログ価格です。プロジェクトの表示範囲と正常なプロバイダー容量の条件は引き続き適用されます。",
+    "Batch, Flex, Priority, and regional processing tiers are not listed.":
+      "Batch、Flex、Priority、地域別処理の価格は掲載していません。",
+    "Search, cache storage, and modality-specific audio, image, or video token rates can add separate usage.":
+      "検索、キャッシュストレージ、音声・画像・動画モダリティ別のトークン価格は、別途使用量として加算される場合があります。",
+    "The completed upstream usage and the billing snapshot attached to the request determine the final debit.":
+      "最終的な差し引き額は、完了した上流使用量とリクエストに添付された課金スナップショットによって決まります。",
+    "Use the dashboard Models page for the current project-visible catalog.":
+      "現在のプロジェクトで表示されるカタログは、ダッシュボードのモデルページで確認してください。",
     "Email & Resend": "メール & Resend",
     "HALO gives one project-scoped key access to provider-native model APIs, long-term Memory, Authentication, service identity, and usage controls. This quickstart sends a first OpenAI-compatible model request.":
       "HALO では、1 つのプロジェクトスコープキーで、プロバイダー固有のモデル API、長期メモリ、認証、サービス ID、使用量制御を利用できます。このクイックスタートでは、OpenAI 互換モデルへの最初のリクエストを送信します。",

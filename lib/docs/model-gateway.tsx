@@ -5,6 +5,7 @@ import {
   Examples,
   FeatureGrid,
   H2,
+  H3,
 } from "@/components/DocsContent";
 import type { DocPageMap } from "./types";
 
@@ -91,6 +92,241 @@ const openSourceCurl = `curl https://api.agihalo.com/qwen/v1/chat/completions \\
     "max_tokens": 16,
     "stream": false
   }'`;
+
+const withModelCode = (rows: readonly (readonly string[])[]) =>
+  rows.map(([model, ...prices]) => [
+    <code key={model}>{model}</code>,
+    ...prices,
+  ]);
+
+const geminiBasePricing = [
+  ["gemini-3.6-flash", "$1.50", "$0.15", "$7.50"],
+  ["gemini-3.5-flash", "$1.50", "$0.15", "$9.00"],
+  ["gemini-3.5-flash-lite", "$0.30", "$0.03", "$2.50"],
+  [
+    "gemini-3.1-pro-preview",
+    "$2.00 / $4.00",
+    "$0.20 / $0.40",
+    "$12.00 / $18.00",
+  ],
+  ["gemini-3.1-flash-lite", "$0.25", "$0.025", "$1.50"],
+  ["gemini-3-flash-preview", "$0.50", "$0.05", "$3.00"],
+  [
+    "gemini-2.5-pro",
+    "$1.25 / $2.50",
+    "$0.125 / $0.25",
+    "$10.00 / $15.00",
+  ],
+  ["gemini-2.5-flash", "$0.30", "$0.03", "$2.50"],
+  ["gemini-2.5-flash-lite", "$0.10", "$0.01", "$0.40"],
+] as const;
+
+const openAiBasePricing = [
+  [
+    "gpt-5.6",
+    "$6.25 / $12.50",
+    "$0.50 / $1.00",
+    "$30.00 / $45.00",
+  ],
+  [
+    "gpt-5.6-sol",
+    "$6.25 / $12.50",
+    "$0.50 / $1.00",
+    "$30.00 / $45.00",
+  ],
+  [
+    "gpt-5.6-terra",
+    "$2.50 / $5.00",
+    "$0.20 / $0.40",
+    "$12.00 / $18.00",
+  ],
+  [
+    "gpt-5.6-luna",
+    "$0.25 / $0.50",
+    "$0.02 / $0.04",
+    "$1.20 / $1.80",
+  ],
+  ["gpt-5.5", "$5.00 / $10.00", "$0.50 / $1.00", "$30.00 / $45.00"],
+  ["gpt-5.4", "$2.50 / $5.00", "$0.25 / $0.50", "$15.00 / $22.50"],
+  ["gpt-5.4-mini", "$0.75", "$0.075", "$4.50"],
+  ["gpt-5.4-nano", "$0.20", "$0.02", "$1.25"],
+  ["gpt-5.2", "$1.75", "$0.175", "$14.00"],
+  ["gpt-5.1", "$1.25", "$0.125", "$10.00"],
+  ["gpt-5", "$1.25", "$0.125", "$10.00"],
+  ["gpt-5-mini", "$0.25", "$0.025", "$2.00"],
+  ["gpt-5-nano", "$0.05", "$0.005", "$0.40"],
+  ["gpt-4.1", "$2.00", "$0.50", "$8.00"],
+  ["gpt-4.1-mini", "$0.40", "$0.10", "$1.60"],
+  ["gpt-4.1-nano", "$0.10", "$0.025", "$0.40"],
+  ["gpt-4o", "$2.50", "$1.25", "$10.00"],
+  ["gpt-4o-mini", "$0.15", "$0.075", "$0.60"],
+  ["o3", "$2.00", "$0.50", "$8.00"],
+  ["o4-mini", "$1.10", "$0.275", "$4.40"],
+] as const;
+
+const openAiImageBasePricing = [
+  ["gpt-image-2", "$5.00", "$1.25", "—", "$8.00", "$2.00", "$30.00"],
+  [
+    "gpt-image-1.5",
+    "$5.00",
+    "$1.25",
+    "$10.00",
+    "$8.00",
+    "$2.00",
+    "$32.00",
+  ],
+  [
+    "gpt-image-1-mini",
+    "$2.00",
+    "$0.20",
+    "—",
+    "$2.50",
+    "$0.25",
+    "$8.00",
+  ],
+  [
+    "gpt-image-1",
+    "$5.00",
+    "$1.25",
+    "—",
+    "$10.00",
+    "$2.50",
+    "$40.00",
+  ],
+  [
+    "chatgpt-image-latest",
+    "$5.00",
+    "$1.25",
+    "$10.00",
+    "$8.00",
+    "$2.00",
+    "$32.00",
+  ],
+] as const;
+
+const anthropicBasePricing = [
+  ["claude-fable-5", "$10.00", "$1.00", "$12.50", "$50.00"],
+  ["claude-opus-4-8", "$5.00", "$0.50", "$6.25", "$25.00"],
+  ["claude-opus-4-7", "$5.00", "$0.50", "$6.25", "$25.00"],
+  ["claude-opus-4-6", "$5.00", "$0.50", "$6.25", "$25.00"],
+  ["claude-opus-4-5-20251101", "$5.00", "$0.50", "$6.25", "$25.00"],
+  ["claude-sonnet-4-6", "$3.00", "$0.30", "$3.75", "$15.00"],
+  ["claude-sonnet-4-5-20250929", "$3.00", "$0.30", "$3.75", "$15.00"],
+  ["claude-sonnet-4-20250514", "$3.00", "$0.30", "$3.75", "$15.00"],
+  ["claude-haiku-4-5-20251001", "$1.00", "$0.10", "$1.25", "$5.00"],
+  ["claude-3-5-haiku-20241022", "$0.80", "$0.08", "$1.00", "$4.00"],
+] as const;
+
+const deepSeekBasePricing = [
+  ["deepseek-chat", "$0.28", "$0.028", "$0.42"],
+  ["deepseek-reasoner", "$0.28", "$0.028", "$0.42"],
+] as const;
+
+const openSourcePricingFamilies = [
+  {
+    id: "allenai",
+    label: "AllenAI · OLMo",
+    rows: [["allenai/olmo-3-32b-think", "$0.15", "$0.15", "$0.50"]],
+  },
+  {
+    id: "deepseek",
+    label: "DeepSeek",
+    rows: [
+      ["deepseek/deepseek-v4-flash", "$0.135883", "$0.045979", "$0.266656"],
+      ["deepseek/deepseek-v4-pro", "$1.310879", "$0.133455", "$2.632670"],
+    ],
+  },
+  {
+    id: "gemma",
+    label: "Google · Gemma",
+    rows: [
+      ["google/gemma-4-31b-it", "$0.29", "$0.272222", "$0.668889"],
+      ["google/gemma-4-26b-a4b-it", "$0.11", "$0.075556", "$0.368889"],
+    ],
+  },
+  {
+    id: "llama",
+    label: "Meta · Llama",
+    rows: [
+      ["meta-llama/llama-4-maverick", "$0.284", "$0.248", "$0.934"],
+      ["meta-llama/llama-4-scout", "$0.16", "$0.146250", "$0.482500"],
+    ],
+  },
+  {
+    id: "minimax",
+    label: "MiniMax",
+    rows: [["minimax/minimax-m3", "$0.36", "$0.168", "$1.44"]],
+  },
+  {
+    id: "mistral",
+    label: "Mistral AI",
+    rows: [
+      ["mistralai/mistral-small-2603", "$0.168750", "$0.101250", "$0.675"],
+      ["mistralai/mistral-large-2512", "$0.50", "$0.05", "$1.50"],
+    ],
+  },
+  {
+    id: "kimi",
+    label: "Moonshot AI · Kimi",
+    rows: [
+      ["moonshotai/kimi-k3", "$3.00", "$0.30", "$15.00"],
+      ["moonshotai/kimi-k2.7-code", "$0.928744", "$0.186155", "$4.059333"],
+    ],
+  },
+  {
+    id: "nemotron",
+    label: "NVIDIA · Nemotron",
+    rows: [
+      ["nvidia/nemotron-3-nano-30b-a3b", "$0.055", "$0.055", "$0.22"],
+      ["nvidia/nemotron-3-ultra-550b-a55b", "$0.55", "$0.15", "$2.90"],
+    ],
+  },
+  {
+    id: "gpt-oss",
+    label: "OpenAI · GPT-OSS",
+    rows: [
+      ["openai/gpt-oss-120b", "$0.112800", "$0.104467", "$0.478333"],
+      ["openai/gpt-oss-20b", "$0.051167", "$0.043458", "$0.190833"],
+    ],
+  },
+  {
+    id: "qwen",
+    label: "Qwen",
+    rows: [
+      ["qwen/qwen3.6-35b-a3b", "$0.176", "$0.159333", "$1.160625"],
+      ["qwen/qwen3-coder-next", "$0.182", "$0.135200", "$1.10"],
+    ],
+  },
+  {
+    id: "mimo",
+    label: "Xiaomi · MiMo",
+    rows: [
+      ["xiaomi/mimo-v2.5-pro", "$0.549707", "$0.062359", "$1.566080"],
+      ["xiaomi/mimo-v2.5", "$0.138250", "$0.021050", "$0.294"],
+    ],
+  },
+  {
+    id: "glm",
+    label: "Z.ai · GLM",
+    rows: [["z-ai/glm-5.2", "$1.354196", "$0.260500", "$4.348842"]],
+  },
+] as const;
+
+const imagenBasePricing = [
+  ["imagen-3.0-generate-002", "$0.03"],
+  ["imagen-4.0-fast-generate-001", "$0.02"],
+  ["imagen-4.0-generate-001", "$0.04"],
+  ["imagen-4.0-ultra-generate-001", "$0.06"],
+] as const;
+
+const veoBasePricing = [
+  ["veo-3.1-lite-generate-preview", "$0.05", "$0.08", "—"],
+  ["veo-3.1-fast-generate-preview", "$0.10", "$0.12", "$0.30"],
+  ["veo-3.1-generate-preview", "$0.40", "$0.40", "$0.60"],
+  ["veo-3.0-fast-generate-001", "$0.10", "$0.12", "$0.30"],
+  ["veo-3.0-generate-001", "$0.40", "$0.40", "$0.40"],
+  ["veo-2.0-generate-001", "$0.35", "—", "—"],
+] as const;
 
 export const modelGatewayPages: DocPageMap = {
   "model-gateway": {
@@ -201,6 +437,134 @@ export const modelGatewayPages: DocPageMap = {
             selection and this documentation for supported request families.
           </p>
         </Callout>
+      </>
+    ),
+  },
+
+  "model-gateway/pricing": {
+    toc: [
+      { id: "units", label: "How to read prices" },
+      { id: "gemini-pricing", label: "Google Gemini" },
+      { id: "openai-pricing", label: "OpenAI" },
+      { id: "anthropic-pricing", label: "Anthropic" },
+      { id: "deepseek-pricing", label: "DeepSeek" },
+      { id: "open-source-pricing", label: "Open-source" },
+      { id: "media-pricing", label: "Media generation" },
+      { id: "pricing-notes", label: "Billing notes" },
+    ],
+    content: (
+      <>
+        <p>
+          These base rates mirror the HALO production pricing catalog checked on
+          August 1, 2026. Text prices are in USD per 1 million tokens.
+        </p>
+
+        <H2 id="units">How to read prices</H2>
+        <Callout kind="info" title="USD per 1M tokens">
+          <p>
+            Token rates are metered separately by the usage categories shown in
+            each table. Paired values show standard and long-context rates in
+            that order.
+          </p>
+        </Callout>
+
+        <H2 id="gemini-pricing">Google Gemini</H2>
+        <DataTable
+          headers={["Model", "Input", "Cached input", "Output"]}
+          rows={withModelCode(geminiBasePricing)}
+        />
+        <p>
+          Paired Gemini rates apply at up to 200,000 input tokens and above
+          200,000 input tokens.
+        </p>
+
+        <H2 id="openai-pricing">OpenAI</H2>
+        <DataTable
+          headers={["Model", "Uncached input", "Cached input", "Output"]}
+          rows={withModelCode(openAiBasePricing)}
+        />
+        <p>
+          OpenAI Chat Completions reports cached input separately. All remaining
+          prompt input is billed at the uncached-input rate. Paired rates apply
+          at up to 272,000 input tokens and above 272,000 input tokens.
+        </p>
+
+        <H3 id="openai-image-pricing">OpenAI GPT Image</H3>
+        <p>
+          GPT Image rates are in USD per 1 million tokens and are metered
+          separately by text and image modality.
+        </p>
+        <DataTable
+          headers={[
+            "Model",
+            "Text input",
+            "Cached text input",
+            "Text output",
+            "Image input",
+            "Cached image input",
+            "Image output",
+          ]}
+          rows={withModelCode(openAiImageBasePricing)}
+        />
+
+        <H2 id="anthropic-pricing">Anthropic</H2>
+        <DataTable
+          headers={["Model", "Input", "Cached input", "Cache write", "Output"]}
+          rows={withModelCode(anthropicBasePricing)}
+        />
+
+        <H2 id="deepseek-pricing">DeepSeek</H2>
+        <DataTable
+          headers={["Model", "Input", "Cached input", "Output"]}
+          rows={withModelCode(deepSeekBasePricing)}
+        />
+
+        <H2 id="open-source-pricing">Open-source</H2>
+        <p>
+          Open-source rates are HALO catalog rates for the listed runtime pool.
+          Project visibility and healthy provider capacity still apply.
+        </p>
+        {openSourcePricingFamilies.map((family) => (
+          <section key={family.id}>
+            <H3 id={`open-source-${family.id}`}>{family.label}</H3>
+            <DataTable
+              headers={["Model", "Input", "Cached input", "Output"]}
+              rows={withModelCode(family.rows)}
+            />
+          </section>
+        ))}
+
+        <H2 id="media-pricing">Media generation</H2>
+        <H3 id="imagen-pricing">Imagen · per generated image</H3>
+        <DataTable
+          headers={["Model", "Price"]}
+          rows={withModelCode(imagenBasePricing)}
+        />
+        <H3 id="veo-pricing">Veo · USD per generated second</H3>
+        <DataTable
+          headers={["Model", "720p", "1080p", "4K"]}
+          rows={withModelCode(veoBasePricing)}
+        />
+        <p>
+          A dash means that resolution is unavailable and is rejected before
+          provider dispatch.
+        </p>
+
+        <H2 id="pricing-notes">Billing notes</H2>
+        <ul>
+          <li>Batch, Flex, Priority, and regional processing tiers are not listed.</li>
+          <li>
+            Search, cache storage, and modality-specific audio, image, or video
+            token rates can add separate usage.
+          </li>
+          <li>
+            The completed upstream usage and the billing snapshot attached to the
+            request determine the final debit.
+          </li>
+          <li>
+            Use the dashboard Models page for the current project-visible catalog.
+          </li>
+        </ul>
       </>
     ),
   },

@@ -52,6 +52,13 @@ export const NAV_GROUPS: NavGroup[] = [
         keywords: ["router", "models", "provider"],
       },
       {
+        slug: "model-gateway/pricing",
+        title: "Base pricing",
+        description: "Current base rates for supported model families.",
+        group: "Model Gateway",
+        keywords: ["price", "pricing", "cost", "token"],
+      },
+      {
         slug: "model-gateway/gemini",
         title: "Google Gemini",
         description: "Gemini SDK-compatible requests and supported actions.",
